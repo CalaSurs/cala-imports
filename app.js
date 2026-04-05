@@ -5,16 +5,22 @@ const LOGO = "https://i.ibb.co/svPn0G3J/2fc4e911-3cc0-4290-8bd4-19c9f5d3b755.png
 const PRODUCTS = [
   { id:1, name:"AirPods Pro 2", category:"Apple", price:25000,
     desc:"Cancelación de ruido activa de última generación, chip H2, hasta 30 hs de batería con estuche, resistencia al agua IPX4.",
-    img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6509/6509650_sd.jpg" },
+    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048" },
   { id:2, name:"AirPods Max", category:"Apple", price:35000,
     desc:"Over-ear con audio de alta fidelidad, cancelación activa de ruido, chip H1 dual y 20 hs de batería.",
-    img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6373/6373587_sd.jpg" },
+    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Max_-_Azul_2.gif?v=1751315510&width=2048" },
   { id:3, name:"JBL Go 4 Pro", category:"JBL", price:24000,
     desc:"Speaker portátil compacto con sonido potente, resistente al agua IP67, hasta 7 hs de batería.",
-    img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6578/6578525_sd.jpg" },
+    img:"https://www.comeros.com.ar/wp-content/uploads/2025/11/PARLANTE-JBL-GO-4-BLACK-48_x1.png" },
   { id:4, name:"JBL Flip 6", category:"JBL", price:45000,
     desc:"Potente speaker bluetooth con graves profundos, protección IP67, 12 hs de reproducción.",
-    img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6501/6501933_sd.jpg" }
+    img:"https://corrientesmotos.com.ar/wp-content/uploads/2024/10/JBL-Flip-6-1.png" },
+  { id:5, name:"Apple Watch S10", category:"Apple", price:45000,
+    desc:"El Apple Watch Series 10 cuenta con pantalla OLED más grande y brillante, chip S10, diseño más delgado y liviano, sensores de salud.",
+    img:"https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/121202-apple-watch-series-10.png" },
+  { id:6, name:"Alaxe", category:"Otros", price:35000,
+    desc:"Un altavoz inteligente con control por voz, audio mejorado con graves más profundos, conectividad Wi-Fi/Bluetooth.",
+    img:"https://images-na.ssl-images-amazon.com/images/G/01/x-locale/cs/help/images/D2gateway/spot_efd_dot_ring.png" }
 ];
 
 // ---- CART ----
