@@ -6,16 +6,16 @@ const IG = "https://www.instagram.com/cala.imports/";
 const PRODUCTS = [
   { id:1, name:"AirPods Pro 2", category:"Apple", price:0, priceLabel:"PRECIO A DEFINIR",
     desc:"Cancelación de ruido activa de última generación, chip H2, hasta 30 hs de batería con estuche, resistencia al agua IPX4.",
-    img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6509/6509650_sd.jpg" },
+    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048" },
   { id:2, name:"AirPods Max", category:"Apple", price:0, priceLabel:"PRECIO A DEFINIR",
     desc:"Over-ear con audio de alta fidelidad, cancelación activa de ruido, chip H1 dual y 20 hs de batería.",
-    img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6373/6373587_sd.jpg" },
+    img:"https://www.macstation.com.ar/web/image/product.product/99891/image_1024/%5BMWW53BE-A%5D%20AirPods%20Max%20%28Blanco%20estelar%29?unique=b6ccbb0" },
   { id:3, name:"JBL Go 4 Pro", category:"JBL", price:0, priceLabel:"PRECIO A DEFINIR",
     desc:"Speaker portátil compacto con sonido potente, resistente al agua IP67, hasta 7 hs de batería.",
-    img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6578/6578525_sd.jpg" },
+    img:"https://www.jbl.com.ar/dw/image/v2/AAUJ_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dwdb301a06/JBL_GO_4_DETAIL_3_RED_48344_x1.png?sw=537&sfrm=png" },
   { id:4, name:"JBL Flip 6", category:"JBL", price:0, priceLabel:"PRECIO A DEFINIR",
     desc:"Potente speaker bluetooth con graves profundos, protección IP67, 12 hs de reproducción.",
-    img:"https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6501/6501933_sd.jpg" }
+    img:"https://www.jbl.com.ar/dw/image/v2/AAUJ_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw8283b1d9/5_JBL_FLIP6_BACK_BLUE_29415_x1.png?sw=537&sfrm=png" }
 ];
 
 // ---- CART ----
