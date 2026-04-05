@@ -300,7 +300,11 @@ function sendOrder() {
   const nombre = document.getElementById('modal-nombre').value.trim() || 'Cliente';
   const dir = document.getElementById('modal-direccion').value.trim() || 'A coordinar';
   const nota = document.getElementById('modal-nota').value.trim();
-  const msg = ` *NUEVO PEDIDO — CALA IMPORTS*\n\n 🙋 *Cliente:* ${nombre}\n 📦 *Producto:* ${cur.name}\n 💵 *Precio:* ${cur.price} ARS\n 📍 *Entrega:* ${dir}\n${nota?` *Nota:* ${nota}\n`:''}\n Quiero confirmar mi pedido y coordinar el pago. ¡Gracias!`;
+  const msg = ` *NUEVO PEDIDO — CALA IMPORTS*\n\n 🙋 *Cliente:* ${nombre}\n 📦 *Producto:* ${cur.name}\n 💵 *Precio:* ${cur.price} ARS\n 📍 *Entrega:* ${dir}\n${nota?` 💯 *Cantidad:* ${nota}\n`:''}\n ¡Gracias por seleccionar tus productos en Cala Imports! 🙌  
+En unos segunditos te vamos a responder este mensaje con las cosas que desees y toda la información correspondiente.
+
+Cualquier consulta extra que tengas, no dudes en escribirnos.  
+¡Gracias por confiar en Cala Imports! 🔥`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
