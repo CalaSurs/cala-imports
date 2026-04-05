@@ -300,7 +300,7 @@ function sendOrder() {
   const nombre = document.getElementById('modal-nombre').value.trim() || 'Cliente';
   const dir = document.getElementById('modal-direccion').value.trim() || 'A coordinar';
   const nota = document.getElementById('modal-nota').value.trim();
-  const msg = ` *NUEVO PEDIDO — CALA IMPORTS*\n\n 🙋 *Cliente:* ${nombre}\n *Producto:* ${cur.name}\n *Precio:* ${cur.price} ARS\n *Entrega:* ${dir}\n${nota?` *Nota:* ${nota}\n`:''}\n Quiero confirmar mi pedido y coordinar el pago. ¡Gracias!`;
+  const msg = ` *NUEVO PEDIDO — CALA IMPORTS*\n\n 🙋 *Cliente:* ${nombre}\n 📦 *Producto:* ${cur.name}\n 💵 *Precio:* ${cur.price} ARS\n 📍 *Entrega:* ${dir}\n${nota?` *Nota:* ${nota}\n`:''}\n Quiero confirmar mi pedido y coordinar el pago. ¡Gracias!`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
