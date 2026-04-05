@@ -1,5 +1,5 @@
 // ===== CALA IMPORTS — SHARED JS =====
-const WA = "5491155135537";
+const WA = "541128520849";
 const LOGO = "https://i.ibb.co/svPn0G3J/2fc4e911-3cc0-4290-8bd4-19c9f5d3b755.png";
 
 const PRODUCTS = [
@@ -163,7 +163,7 @@ function checkoutCart() {
 
   const items = cart.map(i => `• ${i.name} x${i.qty} — ${fmt(i.price * i.qty)}`).join('\n');
   const total = fmt(getTotal());
-  const msg = `🛍️ *PEDIDO — CALA IMPORTS*\n\n👤 *Cliente:* ${nombre}\n📍 *Dirección:* ${dir}\n\n📦 *Productos:*\n${items}\n\n💰 *Total: ${total}*\n\n💳 Formas de pago: Efectivo, Transferencia, Mercado Pago, Naranja X\n\n✅ Quiero confirmar mi pedido. ¡Gracias!`;
+  const msg = ` 🛍️ *PEDIDO — CALA IMPORTS*\n\n 👤 *Cliente:* ${nombre}\n 📍 *Dirección:* ${dir}\n\n 📦 *Productos:*\n${items}\n\n 💰 *Total: ${total}*\n\n 💳 Formas de pago: Efectivo, Transferencia, Mercado Pago, Naranja X\n\n ✅ Quiero confirmar mi pedido. ¡Gracias!`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
