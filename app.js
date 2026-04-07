@@ -1,6 +1,8 @@
 // ===== CALA IMPORTS — SHARED JS =====
 const WA = "541128520849";
 const LOGO = "https://i.ibb.co/svPn0G3J/2fc4e911-3cc0-4290-8bd4-19c9f5d3b755.png";
+const TIKTOK = "https://www.tiktok.com/@cala.imports";
+const IG = "https://www.instagram.com/cala.imports/";
 
 const PRODUCTS = [
   { id:1, name:"AirPods Pro 2", category:"Apple", price:25000,
@@ -16,30 +18,36 @@ const PRODUCTS = [
     desc:"Potente speaker bluetooth con graves profundos, protección IP67, 12 hs de reproducción.",
     img:"https://corrientesmotos.com.ar/wp-content/uploads/2024/10/JBL-Flip-6-1.png" },
   { id:5, name:"Apple Watch S10", category:"Apple", price:45000,
-    desc:"El Apple Watch Series 10 cuenta con pantalla OLED más grande y brillante, chip S10, diseño más delgado y liviano, sensores de salud.",
+    desc:"Pantalla OLED más grande y brillante, chip S10, diseño más delgado y liviano, sensores de salud avanzados.",
     img:"https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/121202-apple-watch-series-10.png" },
   { id:6, name:"Alaxe", category:"Otros", price:35000,
-    desc:"Un altavoz inteligente con control por voz, audio mejorado con graves más profundos, conectividad Wi-Fi/Bluetooth.",
-    img:"https://images-na.ssl-images-amazon.com/images/G/01/x-locale/cs/help/images/D2gateway/spot_efd_dot_ring.png" }
+    desc:"Altavoz inteligente con control por voz, audio mejorado con graves más profundos, conectividad Wi-Fi/Bluetooth.",
+    img:"https://images-na.ssl-images-amazon.com/images/G/01/x-locale/cs/help/images/D2gateway/spot_efd_dot_ring.png" },
+  // PROMO: bundle producto especial
+  { id:99, name:"Promo 2x AirPods Pro 2", category:"Apple", price:20000,
+    desc:"🔥 PROMO ESPECIAL — 2 AirPods Pro 2 a $20.000 cada uno. ¡Precio por unidad al llevar los dos juntos!",
+    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048",
+    isPromo:true, promoQty:2 }
 ];
 
 // ---- CART ----
-let cart = JSON.parse(localStorage.getItem('cala_cart') || '[]');
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem('cala_cart') || '[]'); } catch(e) { cart = []; }
 
 function saveCart() {
-  localStorage.setItem('cala_cart', JSON.stringify(cart));
+  try { localStorage.setItem('cala_cart', JSON.stringify(cart)); } catch(e) {}
   updateCartUI();
 }
 
 function addToCart(productId, qty) {
+  const p = PRODUCTS.find(p => p.id === productId);
+  if (!p) return;
+  // Promo: always adds 2 units at promo price each
+  const addQty = p.isPromo ? p.promoQty : qty;
   const existing = cart.find(i => i.id === productId);
-  if (existing) { existing.qty += qty; }
-  else {
-    const p = PRODUCTS.find(p => p.id === productId);
-    cart.push({ id: p.id, name: p.name, price: p.price, img: p.img, qty });
-  }
+  if (existing) { existing.qty += addQty; }
+  else { cart.push({ id:p.id, name:p.name, price:p.price, img:p.img, qty:addQty, isPromo:!!p.isPromo }); }
   saveCart();
-  // Flash feedback on button — no auto-open
   const btn = document.getElementById('add-btn-' + productId);
   if (btn) {
     const orig = btn.textContent;
@@ -57,15 +65,17 @@ function removeFromCart(productId) {
 function changeQty(productId, delta) {
   const item = cart.find(i => i.id === productId);
   if (!item) return;
-  item.qty += delta;
+  const p = PRODUCTS.find(p => p.id === productId);
+  // Promo must go up/down in steps of 2
+  const step = (p && p.isPromo) ? p.promoQty : 1;
+  item.qty += delta * step;
   if (item.qty <= 0) removeFromCart(productId);
   else saveCart();
 }
 
 function getTotalItems() { return cart.reduce((s,i) => s+i.qty, 0); }
-function getTotal() { return cart.reduce((s,i) => s + i.price * i.qty, 0); }
-
-function fmt(n) { return '$' + n.toLocaleString('es-AR'); }
+function getTotal()      { return cart.reduce((s,i) => s + i.price * i.qty, 0); }
+function fmt(n)          { return '$' + n.toLocaleString('es-AR'); }
 
 function updateCartUI() {
   const count = getTotalItems();
@@ -80,31 +90,31 @@ function renderCartItems() {
   const container = document.getElementById('cart-items');
   if (!container) return;
   if (cart.length === 0) {
-    container.innerHTML = '<div class="cart-empty"><span style="font-size:36px;opacity:0.25">🛒</span><p>Tu carrito está vacío</p></div>';
-    if (document.getElementById('cart-total-price')) document.getElementById('cart-total-price').textContent = '$0';
+    container.innerHTML = '<div class="cart-empty"><span style="font-size:34px;opacity:.2">🛒</span><p>Tu carrito está vacío</p></div>';
+    const tp = document.getElementById('cart-total-price');
+    if (tp) tp.textContent = '$0';
     hideCheckoutForm();
     return;
   }
   container.innerHTML = cart.map(item => `
     <div class="cart-item">
-      <img class="cart-item-img" src="${item.img}" alt="${item.name}" onerror="this.style.background='#333';this.removeAttribute('src')" />
+      <img class="cart-item-img" src="${item.img}" alt="${item.name}" onerror="this.style.background='#333';this.removeAttribute('src')"/>
       <div class="cart-item-info">
         <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">${fmt(item.price)} c/u</div>
+        <div class="cart-item-price">${fmt(item.price)} c/u${item.isPromo ? ' · 🔥 PROMO' : ''}</div>
         <div class="cart-item-qty">
           <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
           <span class="qty-num">${item.qty}</span>
           <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
         </div>
       </div>
-      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
         <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
-        <span style="font-size:12px;font-weight:700;color:#fff;">${fmt(item.price * item.qty)}</span>
+        <span style="font-size:12px;font-weight:700;">${fmt(item.price * item.qty)}</span>
       </div>
     </div>`).join('');
-  if (document.getElementById('cart-total-price')) {
-    document.getElementById('cart-total-price').textContent = fmt(getTotal());
-  }
+  const tp = document.getElementById('cart-total-price');
+  if (tp) tp.textContent = fmt(getTotal());
   showCheckoutForm();
 }
 
@@ -119,16 +129,13 @@ function hideCheckoutForm() {
 
 // ---- VALIDATION ----
 function isValidName(s) {
-  const clean = s.trim();
-  // At least 2 words, only letters/spaces/accents, min 5 chars
-  return clean.length >= 5 && /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/.test(clean) && clean.split(/\s+/).filter(Boolean).length >= 2;
+  const c = s.trim();
+  return c.length >= 5 && /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/.test(c) && c.split(/\s+/).filter(Boolean).length >= 2;
 }
 function isValidAddress(s) {
-  const clean = s.trim();
-  // Must have letters + at least one number, min 8 chars
-  return clean.length >= 8 && /\d/.test(clean) && /[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(clean);
+  const c = s.trim();
+  return c.length >= 8 && /\d/.test(c) && /[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(c);
 }
-
 function showFieldError(id, msg) {
   const el = document.getElementById(id + '-err');
   if (el) { el.textContent = msg; el.style.display = 'block'; }
@@ -138,18 +145,35 @@ function clearFieldError(id) {
   if (el) el.style.display = 'none';
 }
 
+// Payment selection — works on mobile too (uses data attribute, no CSS-only)
+function selectPago(btn) {
+  // Remove selected from all buttons in the same container
+  const container = btn.closest('.pago-opts');
+  if (container) container.querySelectorAll('.pago-opt').forEach(b => {
+    b.classList.remove('selected');
+    b.setAttribute('aria-pressed', 'false');
+  });
+  btn.classList.add('selected');
+  btn.setAttribute('aria-pressed', 'true');
+  const input = document.getElementById('checkout-pago');
+  if (input) input.value = btn.dataset.val;
+}
+
 function checkoutCart() {
   if (cart.length === 0) return;
   const nombreEl = document.getElementById('checkout-nombre');
-  const dirEl = document.getElementById('checkout-dir');
+  const dirEl    = document.getElementById('checkout-dir');
+  const pagoEl   = document.getElementById('checkout-pago');
   if (!nombreEl || !dirEl) return;
 
   const nombre = nombreEl.value.trim();
-  const dir = dirEl.value.trim();
+  const dir    = dirEl.value.trim();
+  const pago   = pagoEl ? pagoEl.value : '';
   let ok = true;
 
   clearFieldError('checkout-nombre');
   clearFieldError('checkout-dir');
+  clearFieldError('checkout-pago');
 
   if (!isValidName(nombre)) {
     showFieldError('checkout-nombre', 'Ingresá tu nombre y apellido completo (solo letras).');
@@ -159,22 +183,32 @@ function checkoutCart() {
     showFieldError('checkout-dir', 'Ingresá una dirección válida (calle, número, ciudad).');
     ok = false;
   }
+  if (!pago) {
+    showFieldError('checkout-pago', 'Seleccioná un método de pago.');
+    ok = false;
+  }
   if (!ok) return;
 
-  const items = cart.map(i => `• ${i.name} x${i.qty} — ${fmt(i.price * i.qty)}`).join('\n');
+  const pagoLabels = { efectivo:'💵 Efectivo', billetera:'📱 Billetera Virtual (Mercado Pago / Naranja X)', cripto:'₿ Criptomoneda' };
+  const pagoStr = pagoLabels[pago] || pago;
+  const items = cart.map(i => `• ${i.name} x${i.qty}${i.isPromo ? ' 🔥PROMO' : ''} — ${fmt(i.price * i.qty)}`).join('\n');
   const total = fmt(getTotal());
-  const msg = ` 🛍️ *PEDIDO — CALA IMPORTS*\n\n 👤 *Cliente:* ${nombre}\n 📍 *Dirección:* ${dir}\n\n 📦 *Productos:*\n${items}\n\n 💰 *Total: ${total}*\n\n 💳 Formas de pago: Efectivo, Transferencia, Mercado Pago, Naranja X\n\n ✅ Quiero confirmar mi pedido. ¡Gracias!`;
+  const msg = `🛍️ *PEDIDO — CALA IMPORTS*\n\n👤 *Cliente:* ${nombre}\n📍 *Dirección:* ${dir}\n💳 *Método de pago:* ${pagoStr}\n\n📦 *Productos:*\n${items}\n\n💰 *Total: ${total}*\n\n✅ Quiero confirmar mi pedido. ¡Gracias!`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function openCart() {
-  document.getElementById('cart-drawer').classList.add('open');
-  document.getElementById('cart-overlay').classList.add('open');
+  const d = document.getElementById('cart-drawer');
+  const o = document.getElementById('cart-overlay');
+  if (d) d.classList.add('open');
+  if (o) o.classList.add('open');
   renderCartItems();
 }
 function closeCart() {
-  document.getElementById('cart-drawer').classList.remove('open');
-  document.getElementById('cart-overlay').classList.remove('open');
+  const d = document.getElementById('cart-drawer');
+  const o = document.getElementById('cart-overlay');
+  if (d) d.classList.remove('open');
+  if (o) o.classList.remove('open');
 }
 
 function contactarWA() {
@@ -182,14 +216,21 @@ function contactarWA() {
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+function mayoristasWA() {
+  const msg = `Hola Cala Imports! 👋 Quisiera hacer una *consulta mayorista*.\n\nEstoy interesado en comprar en cantidad. ¿Me pueden pasar precios y condiciones? ¡Gracias!`;
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
+}
 
-// Set logo src on all .site-logo elements
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  if (m) m.classList.toggle('open');
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.site-logo').forEach(el => el.src = LOGO);
+  document.querySelectorAll('.site-logo').forEach(el => { el.src = LOGO; });
   updateCartUI();
   const page = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-links a').forEach(a => {
-    if (a.getAttribute('href') === page) a.classList.add('active');
+    a.classList.toggle('active', a.getAttribute('href') === page);
   });
 });
