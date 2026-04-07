@@ -16,19 +16,18 @@ const PRODUCTS = [
     desc:"Potente speaker bluetooth con graves profundos, protección IP67, 12 hs de reproducción.",
     img:"https://corrientesmotos.com.ar/wp-content/uploads/2024/10/JBL-Flip-6-1.png" },
   { id:5, name:"Apple Watch S10", category:"Apple", price:45000,
-    desc:"Pantalla OLED más grande y brillante, chip S10, diseño más delgado y liviano, sensores de salud avanzados.",
+    desc:"El Apple Watch Series 10 cuenta con pantalla OLED más grande y brillante, chip S10, diseño más delgado y liviano, sensores de salud.",
     img:"https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/121202-apple-watch-series-10.png" },
   { id:6, name:"Alaxe", category:"Otros", price:35000,
-    desc:"Altavoz inteligente con control por voz, audio mejorado con graves más profundos, conectividad Wi-Fi/Bluetooth.",
+    desc:"Un altavoz inteligente con control por voz, audio mejorado con graves más profundos, conectividad Wi-Fi/Bluetooth.",
     img:"https://images-na.ssl-images-amazon.com/images/G/01/x-locale/cs/help/images/D2gateway/spot_efd_dot_ring.png" }
 ];
 
 // ---- CART ----
-let cart = [];
-try { cart = JSON.parse(localStorage.getItem('cala_cart') || '[]'); } catch(e) { cart = []; }
+let cart = JSON.parse(localStorage.getItem('cala_cart') || '[]');
 
 function saveCart() {
-  try { localStorage.setItem('cala_cart', JSON.stringify(cart)); } catch(e) {}
+  localStorage.setItem('cala_cart', JSON.stringify(cart));
   updateCartUI();
 }
 
@@ -37,11 +36,10 @@ function addToCart(productId, qty) {
   if (existing) { existing.qty += qty; }
   else {
     const p = PRODUCTS.find(p => p.id === productId);
-    if (!p) return;
-    cart.push({ id:p.id, name:p.name, price:p.price, img:p.img, qty });
+    cart.push({ id: p.id, name: p.name, price: p.price, img: p.img, qty });
   }
   saveCart();
-  // Flash feedback — no auto-open
+  // Flash feedback on button — no auto-open
   const btn = document.getElementById('add-btn-' + productId);
   if (btn) {
     const orig = btn.textContent;
@@ -65,8 +63,9 @@ function changeQty(productId, delta) {
 }
 
 function getTotalItems() { return cart.reduce((s,i) => s+i.qty, 0); }
-function getTotal()      { return cart.reduce((s,i) => s + i.price * i.qty, 0); }
-function fmt(n)          { return '$' + n.toLocaleString('es-AR'); }
+function getTotal() { return cart.reduce((s,i) => s + i.price * i.qty, 0); }
+
+function fmt(n) { return '$' + n.toLocaleString('es-AR'); }
 
 function updateCartUI() {
   const count = getTotalItems();
@@ -81,15 +80,14 @@ function renderCartItems() {
   const container = document.getElementById('cart-items');
   if (!container) return;
   if (cart.length === 0) {
-    container.innerHTML = '<div class="cart-empty"><span style="font-size:34px;opacity:.2">🛒</span><p>Tu carrito está vacío</p></div>';
-    const tp = document.getElementById('cart-total-price');
-    if (tp) tp.textContent = '$0';
+    container.innerHTML = '<div class="cart-empty"><span style="font-size:36px;opacity:0.25">🛒</span><p>Tu carrito está vacío</p></div>';
+    if (document.getElementById('cart-total-price')) document.getElementById('cart-total-price').textContent = '$0';
     hideCheckoutForm();
     return;
   }
   container.innerHTML = cart.map(item => `
     <div class="cart-item">
-      <img class="cart-item-img" src="${item.img}" alt="${item.name}" onerror="this.style.background='#333';this.removeAttribute('src')"/>
+      <img class="cart-item-img" src="${item.img}" alt="${item.name}" onerror="this.style.background='#333';this.removeAttribute('src')" />
       <div class="cart-item-info">
         <div class="cart-item-name">${item.name}</div>
         <div class="cart-item-price">${fmt(item.price)} c/u</div>
@@ -99,13 +97,14 @@ function renderCartItems() {
           <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
         <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
-        <span style="font-size:12px;font-weight:700;">${fmt(item.price * item.qty)}</span>
+        <span style="font-size:12px;font-weight:700;color:#fff;">${fmt(item.price * item.qty)}</span>
       </div>
     </div>`).join('');
-  const tp = document.getElementById('cart-total-price');
-  if (tp) tp.textContent = fmt(getTotal());
+  if (document.getElementById('cart-total-price')) {
+    document.getElementById('cart-total-price').textContent = fmt(getTotal());
+  }
   showCheckoutForm();
 }
 
@@ -120,13 +119,16 @@ function hideCheckoutForm() {
 
 // ---- VALIDATION ----
 function isValidName(s) {
-  const c = s.trim();
-  return c.length >= 5 && /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/.test(c) && c.split(/\s+/).filter(Boolean).length >= 2;
+  const clean = s.trim();
+  // At least 2 words, only letters/spaces/accents, min 5 chars
+  return clean.length >= 5 && /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/.test(clean) && clean.split(/\s+/).filter(Boolean).length >= 2;
 }
 function isValidAddress(s) {
-  const c = s.trim();
-  return c.length >= 8 && /\d/.test(c) && /[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(c);
+  const clean = s.trim();
+  // Must have letters + at least one number, min 8 chars
+  return clean.length >= 8 && /\d/.test(clean) && /[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(clean);
 }
+
 function showFieldError(id, msg) {
   const el = document.getElementById(id + '-err');
   if (el) { el.textContent = msg; el.style.display = 'block'; }
@@ -136,28 +138,18 @@ function clearFieldError(id) {
   if (el) el.style.display = 'none';
 }
 
-function selectPago(btn) {
-  document.querySelectorAll('.pago-opt').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  const input = document.getElementById('checkout-pago');
-  if (input) input.value = btn.dataset.val;
-}
-
 function checkoutCart() {
   if (cart.length === 0) return;
   const nombreEl = document.getElementById('checkout-nombre');
-  const dirEl    = document.getElementById('checkout-dir');
-  const pagoEl   = document.getElementById('checkout-pago');
+  const dirEl = document.getElementById('checkout-dir');
   if (!nombreEl || !dirEl) return;
 
   const nombre = nombreEl.value.trim();
-  const dir    = dirEl.value.trim();
-  const pago   = pagoEl ? pagoEl.value : '';
+  const dir = dirEl.value.trim();
   let ok = true;
 
   clearFieldError('checkout-nombre');
   clearFieldError('checkout-dir');
-  clearFieldError('checkout-pago');
 
   if (!isValidName(nombre)) {
     showFieldError('checkout-nombre', 'Ingresá tu nombre y apellido completo (solo letras).');
@@ -167,32 +159,22 @@ function checkoutCart() {
     showFieldError('checkout-dir', 'Ingresá una dirección válida (calle, número, ciudad).');
     ok = false;
   }
-  if (!pago) {
-    showFieldError('checkout-pago', 'Seleccioná un método de pago.');
-    ok = false;
-  }
   if (!ok) return;
 
-  const pagoLabels = { efectivo:'Efectivo', billetera:'Billetera Virtual (Mercado Pago / Naranja X)', cripto:'Criptomoneda' };
-  const pagoStr = pagoLabels[pago] || pago;
   const items = cart.map(i => `• ${i.name} x${i.qty} — ${fmt(i.price * i.qty)}`).join('\n');
   const total = fmt(getTotal());
-  const msg = `🛍️ *PEDIDO — CALA IMPORTS*\n\n👤 *Cliente:* ${nombre}\n📍 *Dirección:* ${dir}\n💳 *Pago:* ${pagoStr}\n\n📦 *Productos:*\n${items}\n\n💰 *Total: ${total}*\n\n✅ Quiero confirmar mi pedido. ¡Gracias!`;
+  const msg = ` 🛍️ *PEDIDO — CALA IMPORTS*\n\n 👤 *Cliente:* ${nombre}\n 📍 *Dirección:* ${dir}\n\n 📦 *Productos:*\n${items}\n\n 💰 *Total: ${total}*\n\n 💳 Formas de pago: Efectivo, Transferencia, Mercado Pago, Naranja X\n\n ✅ Quiero confirmar mi pedido. ¡Gracias!`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function openCart() {
-  const d = document.getElementById('cart-drawer');
-  const o = document.getElementById('cart-overlay');
-  if (d) d.classList.add('open');
-  if (o) o.classList.add('open');
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('cart-overlay').classList.add('open');
   renderCartItems();
 }
 function closeCart() {
-  const d = document.getElementById('cart-drawer');
-  const o = document.getElementById('cart-overlay');
-  if (d) d.classList.remove('open');
-  if (o) o.classList.remove('open');
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('cart-overlay').classList.remove('open');
 }
 
 function contactarWA() {
@@ -200,21 +182,14 @@ function contactarWA() {
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-function mayoristasWA() {
-  const msg = `Hola Cala Imports! 👋 Quisiera hacer una *consulta mayorista*.\n\nEstoy interesado en comprar en cantidad. ¿Me pueden pasar precios y condiciones? ¡Gracias!`;
-  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
-}
+function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
 
-function toggleMenu() {
-  const m = document.getElementById('mobileMenu');
-  if (m) m.classList.toggle('open');
-}
-
+// Set logo src on all .site-logo elements
 window.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.site-logo').forEach(el => { el.src = LOGO; });
+  document.querySelectorAll('.site-logo').forEach(el => el.src = LOGO);
   updateCartUI();
   const page = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-links a').forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === page);
+    if (a.getAttribute('href') === page) a.classList.add('active');
   });
 });
