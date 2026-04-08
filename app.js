@@ -27,7 +27,7 @@ const PRODUCTS = [
   {
     id:3, name:"JBL Go 4 Pro", category:"JBL", price:24000, stock:null,
     desc:"Speaker portátil compacto con sonido potente, resistente al agua IP67, hasta 7 hs de batería.",
-    img:"https://www.comeros.com.ar/wp-content/uploads/2025/11/PARLANTE-JBL-GO-4-BLACK-48_x1.png"
+    img:"https://i.ibb.co/tMMR9FJN/367598205497156.png"
   },
   {
     id:4, name:"JBL Flip 6", category:"JBL", price:45000, stock:0,
