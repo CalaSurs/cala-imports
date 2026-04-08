@@ -188,13 +188,22 @@ function clearFieldError(id) {
   if (el) el.style.display = 'none';
 }
 
+// selectPago — inline styles, works regardless of external CSS
 function selectPago(btn) {
-  const container = btn.closest('.pago-opts');
-  if (container) container.querySelectorAll('.pago-opt').forEach(b => {
-    b.classList.remove('selected'); b.setAttribute('aria-pressed', 'false');
+  var ids = ['pago-efectivo','pago-billetera','pago-cripto'];
+  ids.forEach(function(id) {
+    var b = document.getElementById(id);
+    if (!b) return;
+    b.style.border = '2px solid rgba(255,255,255,.15)';
+    b.style.color = 'rgba(255,255,255,.6)';
+    b.style.background = '#1a1a1a';
+    b.style.boxShadow = 'none';
   });
-  btn.classList.add('selected'); btn.setAttribute('aria-pressed', 'true');
-  const input = document.getElementById('checkout-pago');
+  btn.style.border = '2px solid #25D366';
+  btn.style.color = '#25D366';
+  btn.style.background = 'rgba(37,211,102,.1)';
+  btn.style.boxShadow = '0 0 0 1px #25D366 inset';
+  var input = document.getElementById('checkout-pago');
   if (input) input.value = btn.dataset.val;
 }
 

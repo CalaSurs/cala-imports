@@ -176,14 +176,23 @@
       <span class="field-err" id="checkout-dir-err"></span>
     </div>
     <div class="form-field">
-      <p class="pago-label">Método de pago</p>
-      <div class="pago-opts" role="group" aria-label="Método de pago">
-        <button type="button" class="pago-opt" data-val="efectivo" onclick="selectPago(this)" aria-pressed="false">💵 Efectivo</button>
-        <button type="button" class="pago-opt" data-val="billetera" onclick="selectPago(this)" aria-pressed="false">📱 Billetera</button>
-        <button type="button" class="pago-opt" data-val="cripto" onclick="selectPago(this)" aria-pressed="false">₿ Cripto</button>
+      <p style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px;">Método de pago</p>
+      <div id="pago-opts" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" id="pago-efectivo" data-val="efectivo" onclick="selectPago(this)"
+          style="flex:1;min-width:70px;background:#1a1a1a;border:2px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;text-align:center;font-family:'Montserrat',sans-serif;-webkit-appearance:none;appearance:none;outline:none;transition:all .15s;">
+          💵 Efectivo
+        </button>
+        <button type="button" id="pago-billetera" data-val="billetera" onclick="selectPago(this)"
+          style="flex:1;min-width:70px;background:#1a1a1a;border:2px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;text-align:center;font-family:'Montserrat',sans-serif;-webkit-appearance:none;appearance:none;outline:none;transition:all .15s;">
+          📱 Billetera
+        </button>
+        <button type="button" id="pago-cripto" data-val="cripto" onclick="selectPago(this)"
+          style="flex:1;min-width:70px;background:#1a1a1a;border:2px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;text-align:center;font-family:'Montserrat',sans-serif;-webkit-appearance:none;appearance:none;outline:none;transition:all .15s;">
+          ₿ Cripto
+        </button>
       </div>
       <input type="hidden" id="checkout-pago"/>
-      <span class="field-err" id="checkout-pago-err"></span>
+      <span class="field-err" id="checkout-pago-err" style="font-size:10px;color:#ff6b6b;display:none;margin-top:4px;"></span>
     </div>
     <!-- COMO NOS CONOCISTE — opcional -->
     <div class="form-field">
