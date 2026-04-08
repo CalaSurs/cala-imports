@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="https://i.ibb.co/svPn0G3J/2fc4e911-3cc0-4290-8bd4-19c9f5d3b755.png"/>
 <link rel="stylesheet" href="style.css"/>
 <style>
-/* Products page: always show cart btn (override mobile hide) */
+/* Always show cart btn on this page */
 .cart-btn{display:flex !important;}
 
 .page-hero{padding:40px 28px 26px;border-bottom:1px solid rgba(255,255,255,.07);}
@@ -15,12 +15,12 @@
 .page-hero p{font-size:12px;color:rgba(255,255,255,.35);font-weight:300;}
 
 .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
-.search-box{display:flex;align-items:center;gap:7px;background:#111;border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:8px 14px;flex:1;min-width:140px;}
+.search-box{display:flex;align-items:center;gap:7px;background:#111;border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:8px 14px;flex:1;min-width:130px;}
 .search-box input{background:none;border:none;outline:none;color:#fff;font-family:'Montserrat',sans-serif;font-size:12px;width:100%;}
 .search-box input::placeholder{color:rgba(255,255,255,.22);}
-.filter-btn{background:#111;border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:8px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:border-color .2s,color .2s;white-space:nowrap;}
+.filter-btn{background:#111;border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:7px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:border-color .2s,color .2s;white-space:nowrap;}
 .filter-btn:hover,.filter-btn.active{border-color:rgba(255,255,255,.4);color:#fff;background:rgba(255,255,255,.07);}
-.sort-btn{background:#111;border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:8px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.sort-btn{background:#111;border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:7px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;}
 .sort-btn:hover{border-color:rgba(255,255,255,.4);color:#fff;}
 
 .products-scroll{max-height:calc(100vh - 240px);overflow-y:auto;padding-right:2px;}
@@ -31,9 +31,13 @@
 
 .product-card{background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .22s,transform .18s;}
 .product-card:hover{border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
-.product-img-wrap{width:100%;aspect-ratio:1/1;overflow:hidden;background:#1a1a1a;}
+.product-card.out-of-stock{opacity:.6;border-color:rgba(255,50,50,.2);}
+.product-img-wrap{width:100%;aspect-ratio:1/1;overflow:hidden;background:#1a1a1a;position:relative;}
 .product-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
 .product-card:hover .product-img{transform:scale(1.04);}
+.out-of-stock .product-img{filter:grayscale(60%);}
+.sold-out-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;}
+.sold-out-text{background:#ff5050;color:#fff;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;border-radius:24px;}
 .product-body{padding:16px;flex:1;display:flex;flex-direction:column;}
 .product-category{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:4px;}
 .product-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:6px;}
@@ -45,19 +49,12 @@
 .qty-ctrl button{background:none;border:none;color:#fff;font-size:15px;cursor:pointer;width:16px;height:16px;display:flex;align-items:center;justify-content:center;opacity:.6;transition:opacity .15s;}
 .qty-ctrl button:hover{opacity:1;}
 .qty-ctrl span{font-size:12px;font-weight:700;min-width:16px;text-align:center;}
-.add-btn{flex:1;background:#25D366;color:#fff;border:none;padding:10px 12px;border-radius:22px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:background .2s;}
-.add-btn:hover{background:#1ebe5d;}
-
-/* Promo card highlight */
-.promo-card .product-name{color:#ff6a2f;}
-.promo-card .product-price{color:#ff6a2f;}
-.promo-badge-inline{display:inline-block;background:#ff4500;color:#fff;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:12px;margin-bottom:6px;}
+.add-btn{flex:1;background:#25D366;color:#fff;border:none;padding:10px 12px;border-radius:22px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:background .2s;-webkit-appearance:none;}
+.add-btn:hover:not(:disabled){background:#1ebe5d;}
 
 @media(max-width:640px){
   .page-hero{padding:26px 16px 20px;}
-  /* products scroll disabled on mobile */
   .products-scroll{max-height:none;overflow-y:visible;}
-  /* 2-column compact grid on mobile */
   .products-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
   .section{padding:24px 14px;}
   .toolbar{gap:6px;}
@@ -69,6 +66,7 @@
 </style>
 </head>
 <body>
+
 <div class="mobile-menu" id="mobileMenu">
   <button class="close-menu" onclick="toggleMenu()">✕</button>
   <a href="index.html" onclick="toggleMenu()">Inicio</a>
@@ -80,6 +78,7 @@
   <a class="tt-link" href="https://www.tiktok.com/@cala.imports" target="_blank" rel="noreferrer">TikTok</a>
   <a class="wa-link" href="https://wa.me/541128520849" target="_blank" rel="noreferrer">WhatsApp</a>
 </div>
+
 <nav class="nav">
   <img class="site-logo nav-logo" src="" alt="Cala Imports" onclick="location.href='index.html'" style="cursor:pointer;"/>
   <ul class="nav-links">
@@ -125,19 +124,38 @@
   <div class="ig-banner">
     <div class="ig-banner-text"><h4>SEGUINOS EN REDES</h4><p>Novedades y promos en @cala.imports</p></div>
     <div class="social-banner-btns">
-      <a href="https://www.instagram.com/cala.imports/" class="ig-btn" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" class="ig-icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Instagram</a>
-      <a href="https://www.tiktok.com/@cala.imports" class="tt-btn" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" class="tt-icon"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.96a8.19 8.19 0 004.79 1.53V7.06a4.85 4.85 0 01-1.02-.37z"/></svg> TikTok</a>
+      <a href="https://www.instagram.com/cala.imports/" class="ig-btn" target="_blank" rel="noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="ig-icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+      <a href="https://www.tiktok.com/@cala.imports" class="tt-btn" target="_blank" rel="noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="tt-icon"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.96a8.19 8.19 0 004.79 1.53V7.06a4.85 4.85 0 01-1.02-.37z"/></svg>
+        TikTok
+      </a>
     </div>
   </div>
 </section>
 
 <div class="divider" style="margin-top:28px;"></div>
-<div class="contact-bar"><div class="contact-text"><h3>¿TENÉS ALGUNA CONSULTA?</h3><p>Escribinos y te respondemos al instante</p></div><button class="btn-wa" onclick="contactarWA()"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> ESCRIBINOS AHORA</button></div>
+<div class="contact-bar">
+  <div class="contact-text"><h3>¿TENÉS ALGUNA CONSULTA?</h3><p>Escribinos y te respondemos al instante</p></div>
+  <button class="btn-wa" onclick="contactarWA()">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    ESCRIBINOS AHORA
+  </button>
+</div>
+
 <footer class="footer">
   <img class="site-logo footer-logo" src="" alt="Cala Imports"/>
   <div class="footer-social">
-    <a href="https://www.instagram.com/cala.imports/" class="footer-ig" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" class="ig-icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> @cala.imports</a>
-    <a href="https://www.tiktok.com/@cala.imports" class="footer-tt" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" class="tt-icon"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.96a8.19 8.19 0 004.79 1.53V7.06a4.85 4.85 0 01-1.02-.37z"/></svg> @cala.imports</a>
+    <a href="https://www.instagram.com/cala.imports/" class="footer-ig" target="_blank" rel="noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor" class="ig-icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      @cala.imports
+    </a>
+    <a href="https://www.tiktok.com/@cala.imports" class="footer-tt" target="_blank" rel="noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor" class="tt-icon"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.96a8.19 8.19 0 004.79 1.53V7.06a4.85 4.85 0 01-1.02-.37z"/></svg>
+      @cala.imports
+    </a>
   </div>
   <p>© 2026 CALA IMPORTS · ITUZAINGÓ, BUENOS AIRES</p>
 </footer>
@@ -167,6 +185,30 @@
       <input type="hidden" id="checkout-pago"/>
       <span class="field-err" id="checkout-pago-err"></span>
     </div>
+    <!-- COMO NOS CONOCISTE — opcional -->
+    <div class="form-field">
+      <select class="checkout-fuente-sel" id="checkout-fuente">
+        <option value="">¿Cómo nos conociste? (opcional)</option>
+        <option value="Instagram">Instagram</option>
+        <option value="TikTok">TikTok</option>
+        <option value="WhatsApp">WhatsApp</option>
+        <option value="Un amigo / conocido">Un amigo / conocido</option>
+        <option value="Google">Google</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <!-- RATING — opcional -->
+    <div class="form-field">
+      <p class="star-label">¿Cómo calificás el sitio? (opcional)</p>
+      <div class="star-row" role="group" aria-label="Calificación">
+        <button type="button" class="star-btn" onclick="setStars(1)" aria-pressed="false">★</button>
+        <button type="button" class="star-btn" onclick="setStars(2)" aria-pressed="false">★</button>
+        <button type="button" class="star-btn" onclick="setStars(3)" aria-pressed="false">★</button>
+        <button type="button" class="star-btn" onclick="setStars(4)" aria-pressed="false">★</button>
+        <button type="button" class="star-btn" onclick="setStars(5)" aria-pressed="false">★</button>
+      </div>
+      <input type="hidden" id="checkout-rating"/>
+    </div>
   </div>
   <div class="cart-footer">
     <div class="cart-total"><span class="cart-total-label">Total</span><span class="cart-total-price" id="cart-total-price">$0</span></div>
@@ -177,6 +219,7 @@
     <p class="cart-note">Efectivo · Billetera Virtual · Criptomoneda</p>
   </div>
 </div>
+
 <script src="app.js"></script>
 <script>
 const qtys = {};
@@ -191,8 +234,9 @@ function setCat(cat) {
 }
 function toggleSort() {
   sortDesc = !sortDesc;
-  const btn = document.getElementById('sort-btn');
-  btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg> ' + (sortDesc ? 'Mayor precio' : 'Menor precio');
+  document.getElementById('sort-btn').innerHTML =
+    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg> '
+    + (sortDesc ? 'Mayor precio' : 'Menor precio');
   applyFilters();
 }
 function applyFilters() {
@@ -204,43 +248,84 @@ function applyFilters() {
   }).sort((a,b) => sortDesc ? b.price - a.price : a.price - b.price);
   renderProductList(list);
 }
+
 function f2(n) { return '$' + n.toLocaleString('es-AR'); }
+
+function stockBadge(p) {
+  if (p.stock === 0) return '<span class="stock-badge stock-out">❌ Sin stock</span>';
+  if (typeof p.stock === 'number' && p.stock <= 3) return `<span class="stock-badge stock-low">⚠️ Últimos ${p.stock}</span>`;
+  if (typeof p.stock === 'number') return `<span class="stock-badge stock-in">✅ ${p.stock} disponibles</span>`;
+  return '<span class="stock-badge stock-in">✅ Disponible</span>';
+}
+
 function changeCardQty(id, delta) {
   qtys[id] = Math.max(1, (qtys[id]||1) + delta);
   const el = document.getElementById('qty-' + id);
   if (el) el.textContent = qtys[id];
+  // Update promo info if exists
+  const p = PRODUCTS.find(x => x.id === id);
+  if (p && p.promoQty && p.promoPrice) {
+    const info = document.getElementById('promo-info-' + id);
+    if (info) {
+      if (qtys[id] >= p.promoQty) {
+        info.textContent = `🔥 ¡Promo activa! Precio: ${f2(p.promoPrice)} c/u = ${f2(p.promoPrice * qtys[id])}`;
+        info.style.display = 'block';
+      } else {
+        info.textContent = `🔥 Comprá ${p.promoQty} y pagás ${f2(p.promoPrice)} c/u`;
+        info.style.display = 'block';
+      }
+    }
+  }
 }
+
 function addProduct(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p || p.stock === 0) return;
   addToCart(id, qtys[id] || 1);
   qtys[id] = 1;
   const el = document.getElementById('qty-' + id);
   if (el) el.textContent = 1;
+  const info = document.getElementById('promo-info-' + id);
+  if (info && p.promoQty) {
+    info.textContent = `🔥 Comprá ${p.promoQty} y pagás ${f2(p.promoPrice)} c/u`;
+  }
 }
+
 function renderProductList(list) {
   const grid = document.getElementById('products-grid');
   if (!list.length) { grid.innerHTML = '<div class="no-results">No se encontraron productos.</div>'; return; }
   grid.innerHTML = list.map(p => {
-    const isPromo = p.isPromo;
-    const cardClass = isPromo ? 'product-card promo-card' : 'product-card';
-    const promoBadge = isPromo ? '<span class="promo-badge-inline">🔥 PROMO ESPECIAL</span>' : '';
-    const qtyCtrl = isPromo ? '' : `<div class="qty-ctrl"><button onclick="changeCardQty(${p.id},-1)">−</button><span id="qty-${p.id}">1</span><button onclick="changeCardQty(${p.id},1)">+</button></div>`;
-    const addLabel = isPromo ? `AGREGAR PROMO (${p.promoQty}x)` : 'AGREGAR';
+    const outOfStock = p.stock === 0;
+    const cardClass = outOfStock ? 'product-card out-of-stock' : 'product-card';
+    const soldOverlay = outOfStock ? '<div class="sold-out-overlay"><span class="sold-out-text">Sin Stock</span></div>' : '';
+    const promoBadge = p.promoQty ? '<span class="promo-badge-inline">🔥 PROMO ESPECIAL</span>' : '';
+    const promoInfo = p.promoQty ? `<p class="promo-info" id="promo-info-${p.id}">🔥 Comprá ${p.promoQty} y pagás ${f2(p.promoPrice)} c/u</p>` : '';
+    const qtyCtrl = outOfStock ? '' : `<div class="qty-ctrl"><button onclick="changeCardQty(${p.id},-1)">−</button><span id="qty-${p.id}">1</span><button onclick="changeCardQty(${p.id},1)">+</button></div>`;
+    const addBtn = outOfStock
+      ? `<button class="add-btn" disabled>Sin Stock</button>`
+      : `<button class="add-btn" id="add-btn-${p.id}" onclick="addProduct(${p.id})">AGREGAR</button>`;
     return `<div class="${cardClass}">
-      <div class="product-img-wrap"><img class="product-img" src="${p.img}" alt="${p.name}" onerror="this.style.background='#222';this.removeAttribute('src')"/></div>
+      <div class="product-img-wrap">
+        <img class="product-img" src="${p.img}" alt="${p.name}" onerror="this.style.background='#222';this.removeAttribute('src')"/>
+        ${soldOverlay}
+      </div>
       <div class="product-body">
         ${promoBadge}
+        ${stockBadge(p)}
         <p class="product-category">${p.category}</p>
         <h3 class="product-name">${p.name}</h3>
         <p class="product-desc">${p.desc}</p>
-        <div class="product-price">${f2(p.price)}<span>ARS${isPromo ? ' c/u' : ''}</span></div>
+        ${promoInfo}
+        <div class="product-price">${f2(p.price)}<span>ARS</span></div>
         <div class="product-add">
           ${qtyCtrl}
-          <button class="add-btn" id="add-btn-${p.id}" onclick="addProduct(${p.id})">${addLabel}</button>
+          ${addBtn}
         </div>
       </div>
     </div>`;
   }).join('');
 }
+
 applyFilters();
 </script>
 </body>

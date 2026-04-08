@@ -1,33 +1,49 @@
 // ===== CALA IMPORTS — SHARED JS =====
 const WA = "541128520849";
 const LOGO = "https://i.ibb.co/svPn0G3J/2fc4e911-3cc0-4290-8bd4-19c9f5d3b755.png";
-const TIKTOK = "https://www.tiktok.com/@cala.imports";
-const IG = "https://www.instagram.com/cala.imports/";
 
+// ============================================================
+// PRODUCTOS — para cambiar stock editá el campo "stock":
+//   stock: 0          → SIN STOCK (no se puede comprar)
+//   stock: 5          → muestra "5 disponibles"
+//   stock: null/999   → sin límite visible (no muestra cantidad)
+//
+// PROMO en producto — campos opcionales:
+//   promoQty: 2       → cantidad mínima para activar promo
+//   promoPrice: 20000 → precio por unidad al llevar promoQty
+// ============================================================
 const PRODUCTS = [
-  { id:1, name:"AirPods Pro 2", category:"Apple", price:25000,
+  {
+    id:1, name:"AirPods Pro 2", category:"Apple", price:25000, stock:null,
+    promoQty:2, promoPrice:20000,
     desc:"Cancelación de ruido activa de última generación, chip H2, hasta 30 hs de batería con estuche, resistencia al agua IPX4.",
-    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048" },
-  { id:2, name:"AirPods Max", category:"Apple", price:35000,
+    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048"
+  },
+  {
+    id:2, name:"AirPods Max", category:"Apple", price:35000, stock:null,
     desc:"Over-ear con audio de alta fidelidad, cancelación activa de ruido, chip H1 dual y 20 hs de batería.",
-    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Max_-_Azul_2.gif?v=1751315510&width=2048" },
-  { id:3, name:"JBL Go 4 Pro", category:"JBL", price:24000,
+    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Max_-_Azul_2.gif?v=1751315510&width=2048"
+  },
+  {
+    id:3, name:"JBL Go 4 Pro", category:"JBL", price:24000, stock:null,
     desc:"Speaker portátil compacto con sonido potente, resistente al agua IP67, hasta 7 hs de batería.",
-    img:"https://www.comeros.com.ar/wp-content/uploads/2025/11/PARLANTE-JBL-GO-4-BLACK-48_x1.png" },
-  { id:4, name:"JBL Flip 6", category:"JBL", price:45000,
+    img:"https://www.comeros.com.ar/wp-content/uploads/2025/11/PARLANTE-JBL-GO-4-BLACK-48_x1.png"
+  },
+  {
+    id:4, name:"JBL Flip 6", category:"JBL", price:45000, stock:0,
     desc:"Potente speaker bluetooth con graves profundos, protección IP67, 12 hs de reproducción.",
-    img:"https://corrientesmotos.com.ar/wp-content/uploads/2024/10/JBL-Flip-6-1.png" },
-  { id:5, name:"Apple Watch S10", category:"Apple", price:45000,
+    img:"https://corrientesmotos.com.ar/wp-content/uploads/2024/10/JBL-Flip-6-1.png"
+  },
+  {
+    id:5, name:"Apple Watch S10", category:"Apple", price:45000, stock:0,
     desc:"Pantalla OLED más grande y brillante, chip S10, diseño más delgado y liviano, sensores de salud avanzados.",
-    img:"https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/121202-apple-watch-series-10.png" },
-  { id:6, name:"Alaxe", category:"Otros", price:35000,
+    img:"https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/121202-apple-watch-series-10.png"
+  },
+  {
+    id:6, name:"Alaxe", category:"Otros", price:35000, stock:0,
     desc:"Altavoz inteligente con control por voz, audio mejorado con graves más profundos, conectividad Wi-Fi/Bluetooth.",
-    img:"https://images-na.ssl-images-amazon.com/images/G/01/x-locale/cs/help/images/D2gateway/spot_efd_dot_ring.png" },
-  // PROMO: bundle producto especial
-  { id:99, name:"Promo 2x AirPods Pro 2", category:"Apple", price:20000,
-    desc:"🔥 PROMO ESPECIAL — 2 AirPods Pro 2 a $20.000 cada uno. ¡Precio por unidad al llevar los dos juntos!",
-    img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048",
-    isPromo:true, promoQty:2 }
+    img:"https://images-na.ssl-images-amazon.com/images/G/01/x-locale/cs/help/images/D2gateway/spot_efd_dot_ring.png"
+  }
 ];
 
 // ---- CART ----
@@ -39,14 +55,25 @@ function saveCart() {
   updateCartUI();
 }
 
+// Compute the effective unit price for a product given quantity
+function getUnitPrice(p, qty) {
+  if (p.promoQty && p.promoPrice && qty >= p.promoQty) return p.promoPrice;
+  return p.price;
+}
+
 function addToCart(productId, qty) {
   const p = PRODUCTS.find(p => p.id === productId);
-  if (!p) return;
-  // Promo: always adds 2 units at promo price each
-  const addQty = p.isPromo ? p.promoQty : qty;
+  if (!p || p.stock === 0) return;
+  const effectivePrice = getUnitPrice(p, qty);
   const existing = cart.find(i => i.id === productId);
-  if (existing) { existing.qty += addQty; }
-  else { cart.push({ id:p.id, name:p.name, price:p.price, img:p.img, qty:addQty, isPromo:!!p.isPromo }); }
+  if (existing) {
+    existing.qty += qty;
+    // Recompute price based on new total qty
+    existing.price = getUnitPrice(p, existing.qty);
+  } else {
+    cart.push({ id:p.id, name:p.name, price:effectivePrice, img:p.img, qty,
+      basePrice:p.price, promoQty:p.promoQty||null, promoPrice:p.promoPrice||null });
+  }
   saveCart();
   const btn = document.getElementById('add-btn-' + productId);
   if (btn) {
@@ -65,10 +92,11 @@ function removeFromCart(productId) {
 function changeQty(productId, delta) {
   const item = cart.find(i => i.id === productId);
   if (!item) return;
-  const p = PRODUCTS.find(p => p.id === productId);
-  // Promo must go up/down in steps of 2
-  const step = (p && p.isPromo) ? p.promoQty : 1;
-  item.qty += delta * step;
+  item.qty = Math.max(1, item.qty + delta);
+  // Recompute promo price if applicable
+  if (item.promoQty && item.promoPrice) {
+    item.price = item.qty >= item.promoQty ? item.promoPrice : item.basePrice;
+  }
   if (item.qty <= 0) removeFromCart(productId);
   else saveCart();
 }
@@ -93,15 +121,17 @@ function renderCartItems() {
     container.innerHTML = '<div class="cart-empty"><span style="font-size:34px;opacity:.2">🛒</span><p>Tu carrito está vacío</p></div>';
     const tp = document.getElementById('cart-total-price');
     if (tp) tp.textContent = '$0';
-    hideCheckoutForm();
-    return;
+    hideCheckoutForm(); return;
   }
-  container.innerHTML = cart.map(item => `
-    <div class="cart-item">
+  container.innerHTML = cart.map(item => {
+    const isPromo = item.promoQty && item.qty >= item.promoQty;
+    const promoBadge = isPromo ? ' <span style="color:#ff6a2f;font-size:9px;font-weight:700;">🔥PROMO</span>' : '';
+    const unitLabel = isPromo ? `${fmt(item.price)} c/u 🔥` : `${fmt(item.price)} c/u`;
+    return `<div class="cart-item">
       <img class="cart-item-img" src="${item.img}" alt="${item.name}" onerror="this.style.background='#333';this.removeAttribute('src')"/>
       <div class="cart-item-info">
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">${fmt(item.price)} c/u${item.isPromo ? ' · 🔥 PROMO' : ''}</div>
+        <div class="cart-item-name">${item.name}${promoBadge}</div>
+        <div class="cart-item-price">${unitLabel}</div>
         <div class="cart-item-qty">
           <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
           <span class="qty-num">${item.qty}</span>
@@ -112,7 +142,8 @@ function renderCartItems() {
         <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
         <span style="font-size:12px;font-weight:700;">${fmt(item.price * item.qty)}</span>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   const tp = document.getElementById('cart-total-price');
   if (tp) tp.textContent = fmt(getTotal());
   showCheckoutForm();
@@ -125,6 +156,18 @@ function showCheckoutForm() {
 function hideCheckoutForm() {
   const f = document.getElementById('checkout-form');
   if (f) f.style.display = 'none';
+}
+
+// ---- STAR RATING ----
+let selectedStars = 0;
+function setStars(n) {
+  selectedStars = n;
+  document.querySelectorAll('.star-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i < n);
+    btn.setAttribute('aria-pressed', i < n ? 'true' : 'false');
+  });
+  const inp = document.getElementById('checkout-rating');
+  if (inp) inp.value = n;
 }
 
 // ---- VALIDATION ----
@@ -145,30 +188,30 @@ function clearFieldError(id) {
   if (el) el.style.display = 'none';
 }
 
-// Payment selection — works on mobile too (uses data attribute, no CSS-only)
 function selectPago(btn) {
-  // Remove selected from all buttons in the same container
   const container = btn.closest('.pago-opts');
   if (container) container.querySelectorAll('.pago-opt').forEach(b => {
-    b.classList.remove('selected');
-    b.setAttribute('aria-pressed', 'false');
+    b.classList.remove('selected'); b.setAttribute('aria-pressed', 'false');
   });
-  btn.classList.add('selected');
-  btn.setAttribute('aria-pressed', 'true');
+  btn.classList.add('selected'); btn.setAttribute('aria-pressed', 'true');
   const input = document.getElementById('checkout-pago');
   if (input) input.value = btn.dataset.val;
 }
 
 function checkoutCart() {
   if (cart.length === 0) return;
-  const nombreEl = document.getElementById('checkout-nombre');
-  const dirEl    = document.getElementById('checkout-dir');
-  const pagoEl   = document.getElementById('checkout-pago');
+  const nombreEl  = document.getElementById('checkout-nombre');
+  const dirEl     = document.getElementById('checkout-dir');
+  const pagoEl    = document.getElementById('checkout-pago');
+  const fuenteEl  = document.getElementById('checkout-fuente');
+  const ratingEl  = document.getElementById('checkout-rating');
   if (!nombreEl || !dirEl) return;
 
-  const nombre = nombreEl.value.trim();
-  const dir    = dirEl.value.trim();
-  const pago   = pagoEl ? pagoEl.value : '';
+  const nombre  = nombreEl.value.trim();
+  const dir     = dirEl.value.trim();
+  const pago    = pagoEl ? pagoEl.value : '';
+  const fuente  = fuenteEl ? fuenteEl.value.trim() : '';
+  const rating  = ratingEl ? ratingEl.value : '';
   let ok = true;
 
   clearFieldError('checkout-nombre');
@@ -176,24 +219,27 @@ function checkoutCart() {
   clearFieldError('checkout-pago');
 
   if (!isValidName(nombre)) {
-    showFieldError('checkout-nombre', 'Ingresá tu nombre y apellido completo (solo letras).');
-    ok = false;
+    showFieldError('checkout-nombre', 'Ingresá tu nombre y apellido completo (solo letras).'); ok = false;
   }
   if (!isValidAddress(dir)) {
-    showFieldError('checkout-dir', 'Ingresá una dirección válida (calle, número, ciudad).');
-    ok = false;
+    showFieldError('checkout-dir', 'Ingresá una dirección válida (calle, número, ciudad).'); ok = false;
   }
   if (!pago) {
-    showFieldError('checkout-pago', 'Seleccioná un método de pago.');
-    ok = false;
+    showFieldError('checkout-pago', 'Seleccioná un método de pago.'); ok = false;
   }
   if (!ok) return;
 
-  const pagoLabels = { efectivo:'💵 Efectivo', billetera:'📱 Billetera Virtual (Mercado Pago / Naranja X)', cripto:'₿ Criptomoneda' };
+  const pagoLabels = { efectivo:'💵 Efectivo', billetera:'📱 Billetera Virtual', cripto:'₿ Criptomoneda' };
   const pagoStr = pagoLabels[pago] || pago;
-  const items = cart.map(i => `• ${i.name} x${i.qty}${i.isPromo ? ' 🔥PROMO' : ''} — ${fmt(i.price * i.qty)}`).join('\n');
+  const items = cart.map(i => {
+    const isPromo = i.promoQty && i.qty >= i.promoQty;
+    return `• ${i.name} x${i.qty}${isPromo?' 🔥':''} — ${fmt(i.price * i.qty)}`;
+  }).join('\n');
   const total = fmt(getTotal());
-  const msg = `🛍️ *PEDIDO — CALA IMPORTS*\n\n👤 *Cliente:* ${nombre}\n📍 *Dirección:* ${dir}\n💳 *Método de pago:* ${pagoStr}\n\n📦 *Productos:*\n${items}\n\n💰 *Total: ${total}*\n\n✅ Quiero confirmar mi pedido. ¡Gracias!`;
+  const starStr = rating ? `⭐ ${rating}/5` : 'No calificó';
+  const fuenteStr = fuente || 'No especificó';
+
+  const msg = `🛍️ *PEDIDO — CALA IMPORTS*\n\n👤 *Cliente:* ${nombre}\n📍 *Dirección:* ${dir}\n💳 *Pago:* ${pagoStr}\n\n📦 *Productos:*\n${items}\n\n💰 *Total: ${total}*\n\n${rating ? `⭐ *Calificación del sitio:* ${starStr}\n` : ''}${fuente ? `📢 *¿Cómo nos conoció?* ${fuenteStr}\n` : ''}\n✅ Quiero confirmar mi pedido. ¡Gracias!`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -215,12 +261,10 @@ function contactarWA() {
   const msg = `Hola Cala Imports! 👋 Tengo una consulta sobre sus productos.\n\nMe gustaría saber más sobre disponibilidad, precios y envíos. ¡Gracias!`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
-
 function mayoristasWA() {
   const msg = `Hola Cala Imports! 👋 Quisiera hacer una *consulta mayorista*.\n\nEstoy interesado en comprar en cantidad. ¿Me pueden pasar precios y condiciones? ¡Gracias!`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
-
 function toggleMenu() {
   const m = document.getElementById('mobileMenu');
   if (m) m.classList.toggle('open');
