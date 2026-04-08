@@ -25,7 +25,7 @@ const PRODUCTS = [
     img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Max_-_Azul_2.gif?v=1751315510&width=2048"
   },
   {
-    id:3, name:"JBL Go 4 Pro", category:"JBL", price:24000, stock:null,
+    id:3, name:"JBL Go 4 Pro", category:"JBL", price:25000, stock:null,
     desc:"Speaker portátil compacto con sonido potente, resistente al agua IP67, hasta 7 hs de batería.",
     img:"https://i.ibb.co/tMMR9FJN/367598205497156.png"
   },
