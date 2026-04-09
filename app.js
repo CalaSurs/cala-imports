@@ -25,9 +25,10 @@ const PRODUCTS = [
     img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Max_-_Azul_2.gif?v=1751315510&width=2048"
   },
   {
-    id:3, name:"JBL Go 4 Pro", category:"JBL", price:20000, stock:null,
+    id:3, name:"JBL Go 4 Pro", category:"JBL", price:25000, stock:null,
+    promoQty:2, promoPrice:20000,
     desc:"Speaker portátil compacto con sonido potente, resistente al agua IP67, hasta 7 hs de batería.",
-    img:"https://i.ibb.co/tMMR9FJN/367598205497156.png"
+    img:"https://www.comeros.com.ar/wp-content/uploads/2025/11/PARLANTE-JBL-GO-4-BLACK-48_x1.png"
   },
   {
     id:4, name:"JBL Flip 6", category:"JBL", price:45000, stock:0,

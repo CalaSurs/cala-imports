@@ -44,12 +44,12 @@
 .product-desc{font-size:12px;color:rgba(255,255,255,.4);line-height:1.7;flex:1;margin-bottom:12px;}
 .product-price{font-size:20px;font-weight:700;margin-bottom:12px;}
 .product-price span{font-size:11px;font-weight:400;color:rgba(255,255,255,.35);margin-left:3px;}
-.product-add{display:flex;align-items:center;gap:8px;}
-.qty-ctrl{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);border-radius:22px;padding:5px 10px;}
+.product-add{display:flex;align-items:center;gap:6px;min-width:0;}
+.qty-ctrl{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);border-radius:22px;padding:4px 8px;flex-shrink:0;}
 .qty-ctrl button{background:none;border:none;color:#fff;font-size:15px;cursor:pointer;width:16px;height:16px;display:flex;align-items:center;justify-content:center;opacity:.6;transition:opacity .15s;}
 .qty-ctrl button:hover{opacity:1;}
 .qty-ctrl span{font-size:12px;font-weight:700;min-width:16px;text-align:center;}
-.add-btn{flex:1;background:#25D366;color:#fff;border:none;padding:10px 12px;border-radius:22px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:background .2s;-webkit-appearance:none;}
+.add-btn{flex:1;min-width:0;background:#25D366;color:#fff;border:none;padding:10px 8px;border-radius:22px;font-size:10px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:background .2s;-webkit-appearance:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .add-btn:hover:not(:disabled){background:#1ebe5d;}
 
 @media(max-width:640px){
@@ -57,8 +57,8 @@
   .products-scroll{max-height:none;overflow-y:visible;}
   .products-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
   .section{padding:24px 14px;}
-  .toolbar{gap:6px;}
-  .filter-btn,.sort-btn{font-size:10px;padding:6px 9px;}
+  .toolbar{gap:8px;flex-wrap:wrap;}
+  #filter-cat,#sort-sel{flex:1;min-width:120px;}
 }
 @media(min-width:641px) and (max-width:900px){
   .products-grid{grid-template-columns:repeat(2,1fr);}
@@ -108,14 +108,16 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.4;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" id="search-input" placeholder="Buscar..." oninput="applyFilters()"/>
     </div>
-    <button class="filter-btn active" data-cat="all" onclick="setCat('all')">Todos</button>
-    <button class="filter-btn" data-cat="Apple" onclick="setCat('Apple')">Apple</button>
-    <button class="filter-btn" data-cat="JBL" onclick="setCat('JBL')">JBL</button>
-    <button class="filter-btn" data-cat="Otros" onclick="setCat('Otros')">Otros</button>
-    <button class="sort-btn" id="sort-btn" onclick="toggleSort()">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
-      Mayor precio
-    </button>
+    <select id="filter-cat" onchange="setCat(this.value)" style="background:#111;border:1px solid rgba(255,255,255,.18);border-radius:10px;color:rgba(255,255,255,.75);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;padding:8px 28px 8px 12px;cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,.4)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center;min-width:110px;">
+      <option value="all">Categoría: Todos</option>
+      <option value="Apple">Apple</option>
+      <option value="JBL">JBL</option>
+      <option value="Otros">Otros</option>
+    </select>
+    <select id="sort-sel" onchange="setSort(this.value)" style="background:#111;border:1px solid rgba(255,255,255,.18);border-radius:10px;color:rgba(255,255,255,.75);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;padding:8px 28px 8px 12px;cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,.4)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 10px center;min-width:140px;">
+      <option value="desc">Precio: Mayor a menor</option>
+      <option value="asc">Precio: Menor a mayor</option>
+    </select>
   </div>
   <div class="products-scroll">
     <div class="products-grid" id="products-grid"></div>
@@ -238,14 +240,10 @@ let sortDesc = true;
 
 function setCat(cat) {
   activeCat = cat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
   applyFilters();
 }
-function toggleSort() {
-  sortDesc = !sortDesc;
-  document.getElementById('sort-btn').innerHTML =
-    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg> '
-    + (sortDesc ? 'Mayor precio' : 'Menor precio');
+function setSort(val) {
+  sortDesc = (val === 'desc');
   applyFilters();
 }
 function applyFilters() {
