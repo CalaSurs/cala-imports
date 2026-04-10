@@ -16,7 +16,7 @@ const PRODUCTS = [
   {
     id:1, name:"AirPods Pro 2", category:"Apple", price:25000, stock:null,
     promoQty:2, promoPrice:20000,
-    desc:"Cancelación de ruido activa de última generación, chip H2, hasta 30 hs de batería con estuche, resistencia al agua IPX4.",
+    desc:"Cancelación de ruido activa de última generación, chip H2, hasta 15 hs de batería con estuche, resistencia al agua IPX4.",
     img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048"
   },
   {
