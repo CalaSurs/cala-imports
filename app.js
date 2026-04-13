@@ -14,18 +14,18 @@ const LOGO = "https://i.ibb.co/svPn0G3J/2fc4e911-3cc0-4290-8bd4-19c9f5d3b755.png
 // ============================================================
 const PRODUCTS = [
   {
-    id:1, name:"AirPods Pro 2", category:"Apple", price:25000, stock:null,
+    id:1, name:"AirPods Pro 2", category:"Apple", price:25000, stock:24,
     promoQty:2, promoPrice:20000,
     desc:"Cancelación de ruido activa de última generación, chip H2, hasta 15 hs de batería con estuche, resistencia al agua IPX4.",
     img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048"
   },
   {
-    id:2, name:"AirPods Max", category:"Apple", price:35000, stock:0,
+    id:2, name:"AirPods Max", category:"Apple", price:35000, stock:3,
     desc:"Over-ear con audio de alta fidelidad, cancelación activa de ruido, chip H1 dual y 10 hs de batería.",
     img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Max_-_Azul_2.gif?v=1751315510&width=2048"
   },
   {
-    id:3, name:"JBL Go 4 Pro", category:"JBL", price:25000, stock:null,
+    id:3, name:"JBL Go 4 Pro", category:"JBL", price:25000, stock:4,
     promoQty:2, promoPrice:20000,
     desc:"Speaker portátil compacto con sonido potente, resistente al agua IP67, hasta 7 hs de batería.",
     img:"https://www.comeros.com.ar/wp-content/uploads/2025/11/PARLANTE-JBL-GO-4-BLACK-48_x1.png"
