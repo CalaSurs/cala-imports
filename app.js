@@ -20,7 +20,7 @@ const PRODUCTS = [
     img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Pro_2da_gen_con_MagSafe_USB-C.gif?v=1751315054&width=2048"
   },
   {
-    id:2, name:"AirPods Max", category:"Apple", price:35000, stock:3,
+    id:2, name:"AirPods Max", category:"Apple", price:35000, stock:0,
     desc:"Over-ear con audio de alta fidelidad, cancelación activa de ruido, chip H1 dual y 10 hs de batería.",
     img:"https://www.artifactargentina.com/cdn/shop/files/AirPods_Max_-_Azul_2.gif?v=1751315510&width=2048"
   },
