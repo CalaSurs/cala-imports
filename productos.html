@@ -252,7 +252,13 @@ function applyFilters() {
     const matchCat = activeCat === 'all' || p.category === activeCat;
     const matchQ = !q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
     return matchCat && matchQ;
-  }).sort((a,b) => sortDesc ? b.price - a.price : a.price - b.price);
+  }).sort((a,b) => {
+    // Sin stock always last
+    const aOut = a.stock === 0 ? 1 : 0;
+    const bOut = b.stock === 0 ? 1 : 0;
+    if (aOut !== bOut) return aOut - bOut;
+    return sortDesc ? b.price - a.price : a.price - b.price;
+  });
   renderProductList(list);
 }
 
