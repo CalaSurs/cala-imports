@@ -2,8 +2,20 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#0a0a0a;color:#fff;font-family:'Montserrat',sans-serif;}
 
+/* ---- AD BANNER ---- */
+.ad-banner{position:sticky;top:0;z-index:101;background:linear-gradient(90deg,#1a1a1a 0%,#222 50%,#1a1a1a 100%);border-bottom:1px solid rgba(255,106,47,.3);overflow:hidden;height:36px;display:flex;align-items:center;}
+.ad-banner-track{display:flex;align-items:center;gap:0;animation:adScroll 22s linear infinite;white-space:nowrap;will-change:transform;}
+.ad-banner:hover .ad-banner-track{animation-play-state:paused;}
+.ad-banner-item{display:inline-flex;align-items:center;gap:10px;padding:0 32px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.85);}
+.ad-banner-item .ad-dot{width:5px;height:5px;border-radius:50%;background:#ff6a2f;flex-shrink:0;}
+.ad-banner-sep{color:rgba(255,106,47,.5);font-size:14px;padding:0 4px;}
+.ad-banner-close{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.3);font-size:14px;cursor:pointer;line-height:1;z-index:2;padding:4px;}
+.ad-banner-close:hover{color:rgba(255,255,255,.7);}
+@keyframes adScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
 /* NAV */
-.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(10,10,10,0.97);position:sticky;top:0;z-index:100;gap:12px;}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(10,10,10,0.97);position:sticky;top:36px;z-index:100;gap:12px;transition:top .3s;}
+.nav.banner-hidden{top:0;}
 .nav-logo{height:44px;object-fit:contain;cursor:pointer;}
 .nav-links{display:flex;gap:24px;list-style:none;}
 .nav-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:color .2s;padding-bottom:2px;border-bottom:2px solid transparent;}
