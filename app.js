@@ -345,13 +345,42 @@ function toggleMenu() {
   if (m) m.classList.toggle('open');
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.site-logo').forEach(el => { el.src = LOGO; });
+// ============================================================
+// BANNER PUBLICITARIO — editá solo este array para cambiar
+// el texto en TODAS las páginas al mismo tiempo.
+// ============================================================
+const BANNER_ITEMS = [
+  "Envíos a todo Argentina 🇦🇷",
+  "Fundas Apple desde $7.000 📱",
+];
+
+function closeBanner() {
+  var b = document.getElementById('ad-banner');
+  var n = document.querySelector('.nav');
+  if (b) { b.style.display = 'none'; b.style.height = '0'; }
+  if (n) n.classList.add('banner-hidden');
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  // Logos
+  document.querySelectorAll('.site-logo').forEach(function(el) { el.src = LOGO; });
   updateCartUI();
-  const page = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-links a').forEach(a => {
+  var page = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-links a').forEach(function(a) {
     a.classList.toggle('active', a.getAttribute('href') === page);
   });
+
+  // Banner
+  var banner = document.getElementById('ad-banner');
+  if (banner) {
+    var items = BANNER_ITEMS.concat(BANNER_ITEMS);
+    var html = items.map(function(text) {
+      return '<span class="ad-banner-item"><span class="ad-dot"></span>' + text + '</span><span class="ad-banner-sep">✦</span>';
+    }).join('');
+    banner.innerHTML =
+      '<div class="ad-banner-track">' + html + '</div>' +
+      '<button class="ad-banner-close" onclick="closeBanner()" title="Cerrar">✕</button>';
+  }
 });
 
 // ---- PRODUCT MODAL ----
