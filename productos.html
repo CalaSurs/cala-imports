@@ -75,19 +75,69 @@
 /* Drag pill */
 .modal-drag-pill{width:40px;height:4px;background:rgba(255,255,255,.18);border-radius:4px;margin:12px auto 4px;}
 
-/* Image carousel */
-.modal-carousel{position:relative;width:100%;aspect-ratio:1/1;background:#1a1a1a;overflow:hidden;}
-.modal-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .28s;}
-.modal-slide.active{opacity:1;}
-.modal-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;color:#fff;font-size:16px;transition:background .18s;}
-.modal-arrow:hover{background:rgba(0,0,0,.8);}
-#modal-prev{left:10px;}
-#modal-next{right:10px;}
-.modal-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;}
-.modal-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);border:none;cursor:pointer;padding:0;transition:background .18s,transform .18s;}
-.modal-dot.active{background:#fff;transform:scale(1.2);}
-.modal-close-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.15);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:15px;z-index:6;transition:background .18s;}
-.modal-close-btn:hover{background:rgba(0,0,0,.9);}
+/* Image carousel — mobile optimized */
+.modal-carousel{
+  position:relative;width:100%;
+  height:clamp(220px,55vw,360px);
+  background:#1a1a1a;overflow:hidden;touch-action:pan-y;
+}
+/* Sliding track */
+.modal-img-track{
+  display:flex;height:100%;width:100%;
+  transition:transform .3s cubic-bezier(.25,.46,.45,.94);
+  will-change:transform;
+}
+.modal-slide{
+  flex:0 0 100%;width:100%;height:100%;
+  object-fit:contain;object-position:center;
+  background:#1a1a1a;display:block;
+}
+/* Skeleton shimmer */
+.modal-slide-loading{
+  flex:0 0 100%;width:100%;height:100%;
+  background:linear-gradient(90deg,#1a1a1a 25%,#252525 50%,#1a1a1a 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.modal-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:5;color:#fff;font-size:19px;
+  -webkit-tap-highlight-color:transparent;
+}
+.modal-arrow:active{background:rgba(0,0,0,.9);}
+#modal-prev{left:8px;}
+#modal-next{right:8px;}
+.modal-dots{
+  position:absolute;bottom:8px;left:0;right:0;
+  display:flex;justify-content:center;gap:5px;pointer-events:none;
+}
+.modal-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.35);border:none;
+  cursor:pointer;padding:0;pointer-events:all;
+  transition:background .2s,width .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.modal-dot.active{background:#fff;width:18px;border-radius:3px;}
+.modal-close-btn{
+  position:absolute;top:10px;right:10px;
+  background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#fff;font-size:15px;z-index:6;
+  -webkit-tap-highlight-color:transparent;
+}
+.modal-close-btn:active{background:rgba(0,0,0,.9);}
+.modal-img-counter{
+  position:absolute;top:10px;left:10px;
+  background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;padding:3px 9px;
+  font-size:10px;font-weight:700;color:rgba(255,255,255,.8);z-index:5;
+}
 
 /* Modal body */
 .modal-body{padding:20px 18px 30px;display:flex;flex-direction:column;gap:12px;}
@@ -125,7 +175,36 @@
 </head>
 <body>
 <!-- AD BANNER -->
-<div class="ad-banner" id="ad-banner"></div>
+<div class="ad-banner" id="ad-banner">
+  <div class="ad-banner-track" id="ad-banner-track">
+    <!-- Repeated twice for seamless loop -->
+    <span class="ad-banner-item"><span class="ad-dot"></span>🔥 Promos NUEVAS y Productos NUEVOS</span>
+    <span class="ad-banner-sep">✦</span>
+    <span class="ad-banner-item"><span class="ad-dot"></span>Fundas Apple desde $7.000</span>
+    <span class="ad-banner-sep">✦</span>
+    <span class="ad-banner-item"><span class="ad-dot"></span>2x AirPods Pro 2 a $20.000 c/u</span>
+    <span class="ad-banner-sep">✦</span>
+    <span class="ad-banner-item"><span class="ad-dot"></span>Envíos a todo Argentina</span>
+    <span class="ad-banner-sep">✦</span>
+    <span class="ad-banner-item"><span class="ad-dot"></span>🔥 Promos NUEVAS y Productos NUEVOS</span>
+    <span class="ad-banner-sep">✦</span>
+    <span class="ad-banner-item"><span class="ad-dot"></span>Fundas Apple desde $7.000</span>
+    <span class="ad-banner-sep">✦</span>
+    <span class="ad-banner-item"><span class="ad-dot"></span>2x AirPods Pro 2 a $20.000 c/u</span>
+    <span class="ad-banner-sep">✦</span>
+    <span class="ad-banner-item"><span class="ad-dot"></span>Envíos a todo Argentina</span>
+    <span class="ad-banner-sep">✦</span>
+  </div>
+  <button class="ad-banner-close" onclick="closeBanner()" title="Cerrar">✕</button>
+</div>
+<script>
+function closeBanner(){
+  const b=document.getElementById("ad-banner");
+  const n=document.querySelector(".nav");
+  if(b){b.style.display="none";}
+  if(n){n.classList.add("banner-hidden");}
+}
+</script>
 
 <div class="mobile-menu" id="mobileMenu">
   <button class="close-menu" onclick="toggleMenu()">✕</button>
@@ -226,11 +305,12 @@
 <div class="product-modal-overlay" id="product-modal" onclick="if(event.target===this)closeProductModal()">
   <div class="product-modal">
     <div class="modal-drag-pill"></div>
-    <div class="modal-carousel">
-      <div id="modal-img-track" style="position:relative;width:100%;height:100%;"></div>
+    <div class="modal-carousel" id="modal-carousel">
+      <div class="modal-img-track" id="modal-img-track"></div>
       <button class="modal-arrow" id="modal-prev" onclick="modalPrev()">‹</button>
       <button class="modal-arrow" id="modal-next" onclick="modalNext()">›</button>
       <div class="modal-dots" id="modal-img-dots"></div>
+      <span class="modal-img-counter" id="modal-img-counter"></span>
       <button class="modal-close-btn" onclick="closeProductModal()">✕</button>
     </div>
     <div class="modal-body">

@@ -1,35 +1,6 @@
 // ===== CALA IMPORTS — SHARED JS =====
 const WA = "541128520849";
 const LOGO = "https://i.ibb.co/svPn0G3J/2fc4e911-3cc0-4290-8bd4-19c9f5d3b755.png";
-// ============================================================
-// BANNER PUBLICITARIO — editá solo este array para cambiar
-// los mensajes en TODAS las páginas al mismo tiempo.
-// Agregá, quitá o modificá los textos que quieras.
-// ============================================================
-const BANNER_ITEMS = [
-  "🔥 Promos NUEVAS y Productos NUEVOS",
-  "Envíos a todo Argentina",
-];
-
-// ---- Inyección automática del banner ----
-(function initBanner() {
-  var existing = document.getElementById('ad-banner');
-  if (!existing) return;
-  var items = BANNER_ITEMS.concat(BANNER_ITEMS);
-  var html = items.map(function(text) {
-    return '<span class="ad-banner-item"><span class="ad-dot"></span>' + text + '</span><span class="ad-banner-sep">✦</span>';
-  }).join('');
-  existing.innerHTML = '<div class="ad-banner-track" id="ad-banner-track">' + html + '</div>'
-    + '<button class="ad-banner-close" onclick="closeBanner()" title="Cerrar">✕</button>';
-})();
-
-function closeBanner() {
-  var b = document.getElementById('ad-banner');
-  var n = document.querySelector('.nav');
-  if (b) b.style.display = 'none';
-  if (n) n.classList.add('banner-hidden');
-}
-
 
 // ============================================================
 // PRODUCTOS — para cambiar stock editá el campo "stock":
@@ -457,31 +428,87 @@ function openProductModal(productId) {
 function renderModalImages() {
   const track = document.getElementById('modal-img-track');
   const dots = document.getElementById('modal-img-dots');
+  const counter = document.getElementById('modal-img-counter');
+  const prev = document.getElementById('modal-prev');
+  const next = document.getElementById('modal-next');
   if (!track) return;
 
-  track.innerHTML = modalImgs.map((src, i) =>
-    `<img src="${src}" alt="Imagen ${i+1}" class="modal-slide${i===modalImgIndex?' active':''}" onerror="this.style.background='#222';this.removeAttribute('src')"/>`
-  ).join('');
+  const multi = modalImgs.length > 1;
 
+  // Build sliding track — lazy load all except active
+  track.innerHTML = modalImgs.map((src, i) => {
+    const loading = i === modalImgIndex ? 'eager' : 'lazy';
+    return '<img src="' + src + '" alt="Imagen ' + (i+1) + '" class="modal-slide"'
+      + ' loading="' + loading + '" decoding="async"'
+      + ' onerror="this.src=\'\';this.style.background=\'#252525\'" />';
+  }).join('');
+
+  // Slide to active image instantly (no animation on initial render)
+  track.style.transition = 'none';
+  track.style.transform = 'translateX(-' + (modalImgIndex * 100) + '%)';
+  // Re-enable animation after paint
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      track.style.transition = 'transform .3s cubic-bezier(.25,.46,.45,.94)';
+    });
+  });
+
+  // Dots
   if (dots) {
-    dots.innerHTML = modalImgs.length > 1
-      ? modalImgs.map((_, i) => `<button class="modal-dot${i===modalImgIndex?' active':''}" onclick="setModalImg(${i})"></button>`).join('')
+    dots.innerHTML = multi
+      ? modalImgs.map(function(_, i) {
+          return '<button class="modal-dot' + (i === modalImgIndex ? ' active' : '') + '" onclick="setModalImg(' + i + ')"></button>';
+        }).join('')
       : '';
   }
 
-  // Show/hide arrows
-  const prev = document.getElementById('modal-prev');
-  const next = document.getElementById('modal-next');
-  if (prev) prev.style.display = modalImgs.length > 1 ? 'flex' : 'none';
-  if (next) next.style.display = modalImgs.length > 1 ? 'flex' : 'none';
+  // Counter badge (e.g. "2 / 3")
+  if (counter) {
+    if (multi) {
+      counter.textContent = (modalImgIndex + 1) + ' / ' + modalImgs.length;
+      counter.style.display = 'block';
+    } else {
+      counter.style.display = 'none';
+    }
+  }
+
+  if (prev) prev.style.display = multi ? 'flex' : 'none';
+  if (next) next.style.display = multi ? 'flex' : 'none';
+}
+
+function updateModalSlide() {
+  var track = document.getElementById('modal-img-track');
+  var dots = document.getElementById('modal-img-dots');
+  var counter = document.getElementById('modal-img-counter');
+  if (track) {
+    track.style.transform = 'translateX(-' + (modalImgIndex * 100) + '%)';
+  }
+  if (dots) {
+    Array.from(dots.children).forEach(function(btn, i) {
+      btn.classList.toggle('active', i === modalImgIndex);
+    });
+  }
+  if (counter) {
+    counter.textContent = (modalImgIndex + 1) + ' / ' + modalImgs.length;
+  }
+  // Preload next image
+  var imgs = track ? track.querySelectorAll('img') : [];
+  var next = (modalImgIndex + 1) % modalImgs.length;
+  if (imgs[next] && !imgs[next].src) imgs[next].src = modalImgs[next];
 }
 
 function setModalImg(i) {
   modalImgIndex = i;
-  renderModalImages();
+  updateModalSlide();
 }
-function modalPrev() { modalImgIndex = (modalImgIndex - 1 + modalImgs.length) % modalImgs.length; renderModalImages(); }
-function modalNext() { modalImgIndex = (modalImgIndex + 1) % modalImgs.length; renderModalImages(); }
+function modalPrev() {
+  modalImgIndex = (modalImgIndex - 1 + modalImgs.length) % modalImgs.length;
+  updateModalSlide();
+}
+function modalNext() {
+  modalImgIndex = (modalImgIndex + 1) % modalImgs.length;
+  updateModalSlide();
+}
 
 let modalQtys = {};
 function changeModalQty(id, delta) {
@@ -521,15 +548,50 @@ function closeProductModal() {
   document.body.style.overflow = '';
 }
 
-// Swipe support for modal
-let touchStartX = 0;
-document.addEventListener('touchstart', e => {
-  if (document.getElementById('product-modal')?.classList.contains('open')) {
-    touchStartX = e.touches[0].clientX;
+// Swipe / drag support for modal carousel
+(function() {
+  var startX = 0, startY = 0, startTime = 0, dragging = false, currentDx = 0;
+
+  function isModalOpen() {
+    var m = document.getElementById('product-modal');
+    return m && m.classList.contains('open');
   }
-}, {passive:true});
-document.addEventListener('touchend', e => {
-  if (!document.getElementById('product-modal')?.classList.contains('open')) return;
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) > 50) dx < 0 ? modalNext() : modalPrev();
-}, {passive:true});
+  function getTrack() { return document.getElementById('modal-img-track'); }
+
+  document.addEventListener('touchstart', function(e) {
+    if (!isModalOpen()) return;
+    var t = e.touches[0];
+    startX = t.clientX; startY = t.clientY;
+    startTime = Date.now(); dragging = true; currentDx = 0;
+    var track = getTrack();
+    if (track) track.style.transition = 'none';
+  }, {passive:true});
+
+  document.addEventListener('touchmove', function(e) {
+    if (!dragging || !isModalOpen()) return;
+    var t = e.touches[0];
+    var dx = t.clientX - startX;
+    var dy = t.clientY - startY;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(currentDx) < 5) return; // vertical scroll
+    currentDx = dx;
+    var track = getTrack();
+    if (track && modalImgs.length > 1) {
+      var base = modalImgIndex * 100;
+      var offset = (dx / track.parentElement.offsetWidth) * 100;
+      track.style.transform = 'translateX(calc(-' + base + '% + ' + dx + 'px))';
+    }
+  }, {passive:true});
+
+  document.addEventListener('touchend', function(e) {
+    if (!dragging || !isModalOpen()) { dragging = false; return; }
+    dragging = false;
+    var track = getTrack();
+    if (track) track.style.transition = 'transform .3s cubic-bezier(.25,.46,.45,.94)';
+    var elapsed = Date.now() - startTime;
+    var velocity = Math.abs(currentDx) / elapsed;
+    var threshold = velocity > 0.3 ? 20 : 60; // fast flick needs less distance
+    if (currentDx < -threshold) modalNext();
+    else if (currentDx > threshold) modalPrev();
+    else updateModalSlide(); // snap back
+  }, {passive:true});
+})();
