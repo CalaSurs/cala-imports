@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Finalizar pedido — Cala Imports</title>
+<meta name="description" content="Completá tus datos y confirmá el pedido por WhatsApp.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F6F5F2">
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/favicon.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+    <a class="logo" href="index.html" aria-label="Cala Imports — inicio">
+      <img class="logo-img" src="assets/img/logo-oscuro.png" alt="Cala Imports" width="640" height="331">
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="pormayor.html">Por Mayor</a>
+      <a href="novedades.html">Novedades</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <div class="header-actions">
+      <a class="icon-btn" data-wa aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20.5l1.3-4.4A8.2 8.2 0 1 1 8 19.3l-4.5 1.2z"/><path d="M9 9.2c.2 1 .8 2.2 1.7 3.1.9.9 2 1.5 3.1 1.7.4.1.8-.1 1-.4l.5-.8-2-1-.7.8a5.6 5.6 0 0 1-2.2-2.2l.8-.7-1-2-.8.5c-.3.2-.5.6-.4 1z" stroke-width="1.4"/></svg></a>
+      <button class="icon-btn" data-abrir-carrito aria-label="Abrir carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 8H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg><span class="cart-count">0</span></button>
+      <button class="icon-btn burger" id="burger" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="container">
+      <nav class="crumbs"><a href="carrito.html">Carrito</a> / <span>Finalizar</span></nav>
+      <h1 class="h2">Último paso</h1>
+      <div class="steps"><b>1. Tus datos</b> <span>· 2. Confirmás por WhatsApp ·</span> <span>3. Coordinamos pago y envío</span></div>
+    </div>
+  </section>
+
+  <section class="section-sm" style="padding-top:8px">
+    <div class="container">
+      <div class="checkout-wrap" id="pasoDatos">
+        <form class="panel" id="formulario" novalidate>
+          <h2 class="titulo-bloque">Datos del pedido</h2>
+
+          <div class="stack" style="gap:12px">
+            <div class="field">
+              <input class="input" id="nombre" placeholder="Nombre y apellido completo" autocomplete="name" required>
+              <span class="err">Escribí tu nombre y apellido</span>
+            </div>
+            <div class="field">
+              <input class="input" id="direccion" placeholder="Dirección (calle, número, ciudad, provincia)" autocomplete="street-address" required>
+              <span class="err">Escribí tu dirección</span>
+            </div>
+          </div>
+
+          <h3 class="titulo-bloque">Método de pago</h3>
+          <div class="radio-group" id="pagos"></div>
+
+          <div class="field" style="margin-top:20px">
+            <select class="select" id="conociste">
+              <option value="">¿Cómo nos conociste? (opcional)</option>
+              <option>Instagram</option>
+              <option>TikTok</option>
+              <option>Me lo recomendaron</option>
+              <option>Google</option>
+              <option>Ya compré antes</option>
+              <option>Otro</option>
+            </select>
+          </div>
+
+          <h3 class="titulo-bloque">¿Cómo calificás el sitio? <span class="hint">(opcional)</span></h3>
+          <div class="stars-input" id="estrellas" role="radiogroup" aria-label="Calificación del sitio"></div>
+
+          <div class="note" style="margin-top:22px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20.5l1.3-4.4A8.2 8.2 0 1 1 8 19.3l-4.5 1.2z"/></svg>
+            <span><b>No cobramos online.</b> Al confirmar se abre WhatsApp con tu pedido escrito. Ahí te pasamos los datos para pagar y el costo del envío.</span>
+          </div>
+
+          <button class="btn btn-lg btn-block" type="submit" style="margin-top:20px" id="confirmar">Confirmar por WhatsApp</button>
+          <p class="tiny muted center" style="margin-top:12px" data-aviso></p>
+        </form>
+
+        <aside class="summary">
+          <div class="panel" id="resumen"></div>
+          <a class="btn btn-ghost btn-block" href="carrito.html" style="margin-top:12px">Editar carrito</a>
+        </aside>
+      </div>
+
+      <div id="pasoListo" style="display:none">
+        <div class="panel center" style="max-width:600px;margin:0 auto;padding:48px 30px">
+          <div style="width:72px;height:72px;border-radius:999px;margin:0 auto 20px;display:grid;place-items:center" class="t-menta">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg>
+          </div>
+          <h2 class="h2">¡Pedido enviado!</h2>
+          <p class="lead" style="margin:12px auto 8px;max-width:420px">Tu pedido <b id="numeroPedido"></b> ya está en WhatsApp. Mandanos el mensaje y lo confirmamos al toque.</p>
+          <p class="small muted" style="margin-bottom:24px">Si WhatsApp no se abrió solo, usá el botón de abajo.</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <a class="btn btn-lg" id="abrirWa" target="_blank" rel="noopener">Abrir WhatsApp</a>
+            <a class="btn btn-lg btn-ghost" href="productos.html">Seguir comprando</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img class="footer-logo" src="assets/img/logo-transparente.png" alt="Cala Imports" width="640" height="331" loading="lazy">
+        <p style="margin-top:16px;max-width:320px">Tecnología al mejor precio, con trato personalizado. Somos de <span data-ubicacion></span> y enviamos a todo Argentina.</p>
+      </div>
+      <div>
+        <h4>Tienda</h4>
+        <ul>
+          <li><a href="productos.html">Todos los productos</a></li>
+          <li><a href="pormayor.html">Por mayor</a></li>
+          <li><a href="novedades.html">Novedades</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Nosotros</h4>
+        <ul>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="index.html#listaPreguntas">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li><a data-wa>WhatsApp</a></li>
+          <li><a data-ig><span data-usuario></span></a></li>
+          <li><span data-ubicacion></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-anio>2026</span> Cala Imports · <span data-ubicacion></span></span>
+      <nav>
+        <a href="privacidad.html">Privacidad</a>
+        <a href="terminos.html">Términos</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/checkout.js"></script>
+</body>
+</html>
