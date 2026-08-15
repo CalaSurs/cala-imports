@@ -12,17 +12,16 @@ window.CALA_DATA = {
 
   categorias: [
     { id: 'apple', nombre: 'Apple', color: 'lila' },
-    { id: 'jbl',   nombre: 'JBL',   color: 'cielo' },
-    { id: 'otros', nombre: 'Otros', color: 'menta' }
+    { id: 'jbl',   nombre: 'JBL',   color: 'cielo' }
   ],
 
   productos: [
     {
       id: 'airpods-pro-2', nombre: 'AirPods Pro 2', categoria: 'apple',
-      precio: 25000, precio2: 20000, destacado: true,
+      precio: 26500, precio2: 22000, destacado: true,
       mayor: [
-        { min: 3, precio: 19000 }, { min: 5, precio: 18000 }, { min: 10, precio: 16500 },
-        { min: 20, precio: 15500 }, { min: 50, precio: 14500 }, { min: 100, precio: 13500 }
+        { min: 3, precio: 21500 }, { min: 5, precio: 19500 }, { min: 10, precio: 18500 },
+        { min: 20, precio: 17500 }, { min: 50, precio: 16500 }, { min: 100, precio: 15500 }
       ],
       img: 'assets/img/productos/airpods-pro-2.gif',
       desc: 'Calidad AAA con cancelación de ruido activa, chip H2, pop-up en pantalla y hasta 30 hs de batería con el estuche.',
@@ -30,10 +29,10 @@ window.CALA_DATA = {
     },
     {
       id: 'jbl-go-4-pro', nombre: 'JBL Go 4 Pro', categoria: 'jbl',
-      precio: 20000, precio2: 17500, destacado: true,
+      precio: 22500, precio2: 19500, destacado: true,
       mayor: [
-        { min: 5, precio: 17000 }, { min: 10, precio: 16000 }, { min: 20, precio: 15000 },
-        { min: 50, precio: 14000 }, { min: 100, precio: 13500 }
+        { min: 5, precio: 19000 }, { min: 10, precio: 18500 }, { min: 20, precio: 17500 },
+        { min: 50, precio: 16500 }, { min: 100, precio: 15500 }
       ],
       img: 'assets/img/productos/jbl-go-4.png',
       desc: 'Speaker portátil compacto con sonido potente, resistente al agua IP67, hasta 7 hs de batería.',
@@ -43,8 +42,8 @@ window.CALA_DATA = {
       id: 'cargador-apple', nombre: 'Cargador Apple Lightning + USB-C', categoria: 'apple',
       precio: 15000, precio2: 10000, destacado: true,
       mayor: [
-        { min: 5, precio: 9000 }, { min: 10, precio: 8000 }, { min: 20, precio: 7500 },
-        { min: 30, precio: 7000 }, { min: 50, precio: 6500 }, { min: 100, precio: 5500 }
+        { min: 5, precio: 9500 }, { min: 10, precio: 8000 }, { min: 20, precio: 7700 },
+        { min: 30, precio: 7200 }, { min: 50, precio: 6700 }, { min: 100, precio: 5800 }
       ],
       img: 'assets/img/productos/cargador-apple.png',
       desc: 'Cable + cabezal USB-C a Lightning. Carga rápida de 25W, compatible con iPhone, iPad y más.',
@@ -52,11 +51,11 @@ window.CALA_DATA = {
     },
     {
       id: 'fundas-apple', nombre: 'Fundas iPhone Silicone Case', categoria: 'apple',
-      precio: 7000, precio2: 5000, destacado: true,
+      precio: 7500, precio2: 5200, destacado: true,
       nota: 'Indicá modelo y color al confirmar el pedido',
       mayor: [
-        { min: 10, precio: 4500 }, { min: 20, precio: 4200 }, { min: 50, precio: 3700 },
-        { min: 100, precio: 3200 }, { min: 200, precio: 2900 }, { min: 500, precio: 2500 }
+        { min: 20, precio: 5000 }, { min: 50, precio: 4100 },
+        { min: 100, precio: 3500 }, { min: 200, precio: 3100 }, { min: 500, precio: 2600 }
       ],
       img: 'assets/img/productos/fundas-apple.png',
       desc: 'Modelos del iPhone 11 al 17 Pro Max. Silicona suave al tacto, variedad de colores y diseños.',
@@ -64,43 +63,14 @@ window.CALA_DATA = {
     },
     {
       id: 'battery-pack', nombre: 'Battery Pack Magnético', categoria: 'apple',
-      precio: 20000, precio2: 17000, destacado: true,
+      precio: 20000, precio2: 17500, destacado: true,
       mayor: [
-        { min: 5, precio: 16000 }, { min: 10, precio: 15000 }, { min: 25, precio: 14000 },
-        { min: 50, precio: 13000 }, { min: 75, precio: 12000 }, { min: 100, precio: 11000 }
+        { min: 5, precio: 17000 }, { min: 10, precio: 16500 }, { min: 25, precio: 15500 },
+        { min: 50, precio: 14500 }, { min: 75, precio: 13500 }, { min: 100, precio: 12500 }
       ],
       img: 'assets/img/productos/battery-pack.png',
       desc: 'Carga portátil que se pega solo al iPhone por imán. Compacto, liviano y sin cables: ideal para viajes, laburo o clases.',
       detalle: 'Margen alto y rotación rápida. Uno de los favoritos de los revendedores.'
-    },
-    {
-      id: 'airpods-max', nombre: 'AirPods Max', categoria: 'apple',
-      precio: 35000, precio2: 0, destacado: false,
-      mayor: [
-        { min: 3, precio: 30000 }, { min: 5, precio: 28000 }, { min: 10, precio: 26000 },
-        { min: 20, precio: 25000 }, { min: 40, precio: 24000 }, { min: 60, precio: 23000 }
-      ],
-      img: 'assets/img/productos/airpods-max.gif',
-      desc: 'Calidad AAA+. Over-ear con audio de alta fidelidad, cancelación activa de ruido y 20 hs de batería.',
-      detalle: 'Consultanos por WhatsApp el plazo de entrega según la cantidad que necesites.'
-    },
-    {
-      id: 'jbl-flip-6', nombre: 'JBL Flip 6', categoria: 'jbl',
-      precio: 45000, precio2: 0, destacado: false,
-      img: 'assets/img/productos/jbl-flip-6.png',
-      desc: 'Potente speaker bluetooth con graves profundos, protección IP67, 12 hs de reproducción.'
-    },
-    {
-      id: 'apple-watch-s10', nombre: 'Apple Watch S10', categoria: 'apple',
-      precio: 45000, precio2: 0, destacado: false,
-      img: 'assets/img/productos/apple-watch-s10.png',
-      desc: 'Pantalla OLED más grande y brillante, chip S10, diseño más delgado y liviano, sensores de salud avanzados.'
-    },
-    {
-      id: 'alaxe', nombre: 'Alaxe', categoria: 'otros',
-      precio: 35000, precio2: 0, destacado: false,
-      img: 'assets/img/productos/alaxe.png',
-      desc: 'Altavoz inteligente con control por voz, audio mejorado con graves más profundos, conectividad Wi-Fi/Bluetooth.'
     }
   ],
 
@@ -128,8 +98,8 @@ window.CALA_DATA = {
     },
     {
       etiqueta: 'Promo', fecha: 'Julio 2026', color: 'durazno',
-      titulo: '2x AirPods Pro 2 a $20.000 c/u',
-      texto: 'Llevate 2 AirPods Pro 2 a $20.000 cada uno. Precio exclusivo al llevar los dos juntos.',
+      titulo: '2x AirPods Pro 2 a $22.000 c/u',
+      texto: 'Llevate 2 AirPods Pro 2 a $22.000 cada uno. Precio exclusivo al llevar los dos juntos.',
       pie: 'Disponible en la sección Productos.'
     }
   ],
