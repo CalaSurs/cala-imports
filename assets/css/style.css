@@ -483,6 +483,10 @@ p{margin:0}
 .promo-bar{border-radius:var(--r-lg);padding:15px 17px;margin-bottom:14px;display:flex;gap:11px;align-items:flex-start}
 .promo-bar svg{width:18px;height:18px;flex:none;margin-top:1px}
 .promo-bar p{font-size:.82rem;font-weight:600;line-height:1.45}
+.promo-bar .progreso{margin-top:8px}
+
+.progreso{height:6px;border-radius:99px;background:rgba(0,0,0,.12);overflow:hidden}
+.progreso-fill{height:100%;border-radius:99px;background:currentColor;transition:width .5s var(--smooth)}
 
 .citem{display:flex;gap:13px;padding:14px;background:var(--paper);border-radius:var(--r-lg);margin-bottom:10px}
 .citem img{width:74px;height:74px;border-radius:var(--r-sm);background:var(--soft);object-fit:contain;padding:7px;flex:none}
@@ -733,6 +737,16 @@ p{margin:0}
 @media (max-width:720px){
   :root{--header-h:64px}
   body{padding-bottom:84px}          /* espacio para la barra inferior */
+
+  /* inputs a 16px: por debajo de eso Safari hace zoom automático al tocar */
+  .input,.select,.textarea,.qty input{font-size:16px}
+  .qty{gap:1px}
+  .qty button{width:36px;height:36px}
+  .qty input{width:46px;font-size:15px}
+
+  /* menos costo de blur en gama baja */
+  .header{backdrop-filter:saturate(160%) blur(10px);-webkit-backdrop-filter:saturate(160%) blur(10px)}
+  .bottom-bar{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 
   .container{padding-inline:16px}
   .section{padding:52px 0}

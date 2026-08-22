@@ -238,18 +238,26 @@
   }
 
   /* ==================== carrito lateral ==================== */
-  function barraPromo(t) {
+  /* Un solo mensaje a la vez, por orden de prioridad: pedido mínimo,
+     próximo tramo de precio, envío gratis. Así siempre es claro qué falta. */
+  function barraEstado(t) {
+    if (t.subtotal > 0 && !t.alcanzaMinimo) {
+      return '<div class="promo-bar t-rosa">' + icon('info') +
+        '<div><p>Pedido mínimo <b>' + Cala.precio(t.minimo) + '</b> — te faltan ' + Cala.precio(t.faltaMinimo) + '.</p></div></div>';
+    }
     if (t.sugerencia) {
       var s = t.sugerencia;
       return '<div class="promo-bar t-durazno">' + icon('fire') +
         '<p>Sumá ' + s.faltan + (s.faltan === 1 ? ' unidad más' : ' unidades más') + ' de ' + esc(s.producto.nombre) +
         ' y cada una te queda a ' + Cala.precio(s.precio) + '.</p></div>';
     }
-    if (t.ahorro > 0) {
+    if (t.envioGratis) {
       return '<div class="promo-bar t-menta">' + icon('check') +
-        '<p>¡Genial! Estás ahorrando ' + Cala.precio(t.ahorro) + ' con los precios por cantidad.</p></div>';
+        '<p>🎉 ¡Desbloqueaste el <b>envío gratis</b>!' + (t.ahorro > 0 ? ' Además ahorrás ' + Cala.precio(t.ahorro) + ' por cantidad.' : '') + '</p></div>';
     }
-    return '';
+    return '<div class="promo-bar t-cielo">' + icon('truck') +
+      '<div style="flex:1"><p>Te faltan <b>' + Cala.precio(t.faltaEnvio) + '</b> para el envío gratis.</p>' +
+      '<div class="progreso"><div class="progreso-fill" style="width:' + t.progresoEnvio + '%"></div></div></div></div>';
   }
 
   function lineaHTML(l) {
@@ -261,11 +269,26 @@
           (l.mayorActivo ? ' · <b>por mayor</b>' : (l.promoActiva ? ' · <b>promo 2x</b>' : '')) + '</div>' +
         '<div class="citem-bottom">' +
           '<div class="qty"><button data-menos-id="' + l.id + '" aria-label="Menos">' + icon('minus') + '</button>' +
-          '<span>' + l.cant + '</span><button data-mas-id="' + l.id + '" aria-label="Más">' + icon('plus') + '</button></div>' +
+          '<input type="number" min="1" step="1" value="' + l.cant + '" data-cant-id="' + l.id + '" aria-label="Cantidad">' +
+          '<button data-mas-id="' + l.id + '" aria-label="Más">' + icon('plus') + '</button></div>' +
           '<span class="citem-price">' + Cala.precio(l.total) + '</span>' +
         '</div>' +
         '<button class="citem-remove" data-quitar="' + l.id + '">Quitar</button>' +
       '</div></div>';
+  }
+
+  /* cantidades editables: se confirman al salir del campo o con Enter,
+     para no perder el foco mientras se escribe un número de varios dígitos */
+  function activarCantidades(root) {
+    if (!root) return;
+    $$('[data-cant-id]', root).forEach(function (inp) {
+      var commit = function () {
+        var v = parseInt(inp.value, 10);
+        Cala.definirCantidad(inp.getAttribute('data-cant-id'), isNaN(v) ? 0 : v);
+      };
+      inp.addEventListener('blur', commit);
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') inp.blur(); });
+    });
   }
 
   function pintarDrawer() {
@@ -281,13 +304,16 @@
       foot.innerHTML = '';
       return;
     }
-    body.innerHTML = barraPromo(t) + t.lineas.map(lineaHTML).join('');
+    body.innerHTML = barraEstado(t) + t.lineas.map(lineaHTML).join('');
+    activarCantidades(body);
     foot.innerHTML =
       '<div class="sum-row"><span>Subtotal (' + t.unidades + ')</span><span>' + Cala.precio(t.subtotal) + '</span></div>' +
       (t.ahorro > 0 ? '<div class="sum-row"><span>Ahorro por promo</span><span class="ok">− ' + Cala.precio(t.ahorro) + '</span></div>' : '') +
-      '<div class="sum-row"><span>Envío</span><span>A coordinar</span></div>' +
+      '<div class="sum-row"><span>Envío</span><span' + (t.envioGratis ? ' class="ok">Gratis' : '>A coordinar') + '</span></div>' +
       '<div class="sum-row total"><span>Total</span><span>' + Cala.precio(t.total) + '</span></div>' +
-      '<a class="btn btn-block btn-lg" href="checkout.html" style="margin-top:14px">Finalizar pedido</a>' +
+      (t.alcanzaMinimo
+        ? '<a class="btn btn-block btn-lg" href="checkout.html" style="margin-top:14px">Finalizar pedido</a>'
+        : '<button class="btn btn-block btn-lg" disabled style="margin-top:14px">Pedido mínimo ' + Cala.precio(t.minimo) + '</button>') +
       '<a class="btn btn-ghost btn-block" href="carrito.html" style="margin-top:9px">Ver el carrito</a>';
   }
 
@@ -424,6 +450,8 @@
     $$('[data-aviso]').forEach(function (e) { e.textContent = Cala.cfg.aviso; });
     $$('[data-ubicacion]').forEach(function (e) { e.textContent = Cala.cfg.ubicacion; });
     $$('[data-anio]').forEach(function (e) { e.textContent = new Date().getFullYear(); });
+    $$('[data-envio-gratis]').forEach(function (e) { e.textContent = Cala.precio(Cala.cfg.envioGratisDesde); });
+    $$('[data-minimo]').forEach(function (e) { e.textContent = Cala.precio(Cala.cfg.compraMinima); });
 
     /* clicks globales */
     document.addEventListener('click', function (e) {
@@ -462,7 +490,7 @@
     $: $, $$: $$, esc: esc,
     tarjeta: tarjeta, pintarProductos: pintarProductos, tablaEscala: tablaEscala,
     aviso: aviso, abrirCarrito: abrirCarrito, verProducto: verProducto,
-    barraPromo: barraPromo, lineaHTML: lineaHTML,
+    barraEstado: barraEstado, lineaHTML: lineaHTML, activarCantidades: activarCantidades,
     revelar: revelar, acordeones: acordeones
   };
 

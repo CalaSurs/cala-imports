@@ -27,7 +27,7 @@
       var b = $('#confirmar'); if (b) b.disabled = true;
       return;
     }
-    var b2 = $('#confirmar'); if (b2) b2.disabled = false;
+    var b2 = $('#confirmar'); if (b2) b2.disabled = !t.alcanzaMinimo;
     el.innerHTML =
       '<h3 class="h4" style="margin-bottom:14px">Tu pedido</h3>' +
       t.lineas.map(function (l) {
@@ -39,8 +39,12 @@
       '<hr style="border:none;border-top:1.5px solid var(--line);margin:12px 0">' +
       '<div class="sum-row"><span>Subtotal (' + t.unidades + ')</span><span>' + Cala.precio(t.subtotal) + '</span></div>' +
       (t.ahorro > 0 ? '<div class="sum-row"><span>Ahorro por cantidad</span><span class="ok">− ' + Cala.precio(t.ahorro) + '</span></div>' : '') +
-      '<div class="sum-row"><span>Envío</span><span>A coordinar</span></div>' +
-      '<div class="sum-row total"><span>Total</span><span>' + Cala.precio(t.total) + '</span></div>';
+      '<div class="sum-row"><span>Envío</span><span' + (t.envioGratis ? ' class="ok">Gratis' : '>A coordinar') + '</span></div>' +
+      '<div class="sum-row total"><span>Total</span><span>' + Cala.precio(t.total) + '</span></div>' +
+      (t.alcanzaMinimo
+        ? ''
+        : '<div class="note" style="margin-top:14px;background:var(--rosa);color:var(--rosa-ink)">' + icon('info') +
+          '<span>Pedido mínimo <b>' + Cala.precio(t.minimo) + '</b> — te faltan ' + Cala.precio(t.faltaMinimo) + '.</span></div>');
   }
 
   function validar() {
@@ -107,7 +111,9 @@
 
     $('#formulario').addEventListener('submit', function (e) {
       e.preventDefault();
-      if (!Cala.totales().lineas.length) { UI.aviso('Tu carrito está vacío', 'info'); return; }
+      var tActual = Cala.totales();
+      if (!tActual.lineas.length) { UI.aviso('Tu carrito está vacío', 'info'); return; }
+      if (!tActual.alcanzaMinimo) { UI.aviso('Pedido mínimo ' + Cala.precio(tActual.minimo) + ' — te faltan ' + Cala.precio(tActual.faltaMinimo), 'info'); return; }
       if (!validar()) { UI.aviso('Completá tu nombre y tu dirección', 'info'); return; }
 
       var datos = {

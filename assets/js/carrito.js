@@ -22,7 +22,8 @@
       return;
     }
 
-    items.innerHTML = UI.barraPromo(t) + t.lineas.map(UI.lineaHTML).join('');
+    items.innerHTML = UI.barraEstado(t) + t.lineas.map(UI.lineaHTML).join('');
+    UI.activarCantidades(items);
 
     resumen.innerHTML =
       '<h3 class="h4" style="margin-bottom:14px">Resumen del pedido</h3>' +
@@ -33,10 +34,13 @@
       '<hr style="border:none;border-top:1.5px solid var(--line);margin:12px 0">' +
       '<div class="sum-row"><span>Subtotal (' + t.unidades + ')</span><span>' + Cala.precio(t.subtotal) + '</span></div>' +
       (t.ahorro > 0 ? '<div class="sum-row"><span>Ahorro por cantidad</span><span class="ok">− ' + Cala.precio(t.ahorro) + '</span></div>' : '') +
-      '<div class="sum-row"><span>Envío</span><span>A coordinar</span></div>' +
+      '<div class="sum-row"><span>Envío</span><span' + (t.envioGratis ? ' class="ok">Gratis' : '>A coordinar') + '</span></div>' +
       '<div class="sum-row total"><span>Total</span><span>' + Cala.precio(t.total) + '</span></div>' +
-      '<a class="btn btn-block btn-lg" href="checkout.html" style="margin-top:18px">Finalizar pedido</a>' +
-      '<a class="btn btn-ghost btn-block" id="waPedido" style="margin-top:9px">' + icon('whatsapp') + ' Pedir directo por WhatsApp</a>';
+      (t.alcanzaMinimo
+        ? '<a class="btn btn-block btn-lg" href="checkout.html" style="margin-top:18px">Finalizar pedido</a>' +
+          '<a class="btn btn-ghost btn-block" id="waPedido" style="margin-top:9px">' + icon('whatsapp') + ' Pedir directo por WhatsApp</a>'
+        : '<button class="btn btn-block btn-lg" disabled style="margin-top:18px">Pedido mínimo ' + Cala.precio(t.minimo) + '</button>' +
+          '<p class="tiny muted center" style="margin-top:10px">Te faltan ' + Cala.precio(t.faltaMinimo) + ' para poder confirmar el pedido.</p>');
 
     var wa = $('#waPedido');
     if (wa) { wa.href = Cala.wa(Cala.mensajeCarrito()); wa.target = '_blank'; wa.rel = 'noopener'; }

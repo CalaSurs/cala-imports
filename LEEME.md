@@ -22,15 +22,22 @@ Los productos, precios, promos e info salen de calaimports.shop.
 En `assets/js/config.js`:
 
 ```js
-whatsapp: '541128520849',   // formato internacional, solo números
+whatsapp: '5491155135537',  // formato internacional, solo números
 instagram: 'https://www.instagram.com/cala.imports/',
 ubicacion: 'Ituzaingó, Buenos Aires',
 pagos: ['Efectivo', 'Billetera virtual', 'Criptomoneda'],
 aviso: 'Réplicas · Sin garantía de fábrica · Sin cambios ni devoluciones',
-minimoPromo: 2              // unidades para que se active la promo 2x
+minimoPromo: 2,             // unidades para que se active la promo 2x
+compraMinima: 50000,        // no se puede confirmar un pedido por debajo de esto
+envioGratisDesde: 200000    // a partir de acá el envío es gratis
 ```
 
 El `aviso` aparece automáticamente en el inicio, el catálogo, el carrito, el checkout y los términos.
+Lo mismo pasa con `compraMinima` y `envioGratisDesde`: se leen solos en la marquesina, el
+carrito, el checkout y las preguntas frecuentes — cambiás el número acá una sola vez.
+
+Mientras el pedido no llega al mínimo, el botón de "Finalizar pedido" queda deshabilitado
+en el carrito lateral, en `carrito.html` y en `checkout.html`, con un aviso de cuánto falta.
 
 ### 2. Productos y escala de precios
 Todo el catálogo está en `assets/js/data.js`:
@@ -53,7 +60,7 @@ Todo el catálogo está en `assets/js/data.js`:
 
 - `mayor`: la escala se aplica **sola** en el carrito según las unidades. No hace falta código ni cotización.
 - `precio2`: precio por unidad al llevar 2. Poné `0` si el producto no tiene promo.
-- **No hay control de stock**: se puede pedir cualquier cantidad, sin mínimo ni máximo. La disponibilidad la confirmás vos por WhatsApp.
+- **No hay control de stock**: se puede pedir cualquier cantidad de cada producto, sin máximo. La disponibilidad la confirmás vos por WhatsApp. (El pedido mínimo de `compraMinima` es sobre el total del carrito, no por producto.)
 - `nota`: texto opcional bajo el precio (ej: "Indicá modelo y color").
 - `categoria`: tiene que coincidir con un `id` de la lista `categorias` (apple, jbl, otros).
 
@@ -77,7 +84,9 @@ No hay pagos online. El checkout pide solo cuatro cosas:
 
 Al confirmar se abre WhatsApp con el pedido completo escrito: productos, cantidades,
 precios aplicados (promo 2x o por mayor), total, cómo te conoció y las estrellas.
-El costo del envío se coordina en el chat.
+Los pedidos que superan `envioGratisDesde` van con envío gratis; por debajo, el costo
+se coordina en el chat. El pedido mínimo (`compraMinima`) se valida antes de dejar
+confirmar: si no se llega, el botón queda desactivado con el monto que falta.
 
 ## Logo
 

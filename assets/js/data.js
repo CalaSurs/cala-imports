@@ -76,7 +76,7 @@ window.CALA_DATA = {
 
   beneficios: [
     { icono: 'chat',  color: 'lila',   titulo: 'Trato personalizado', texto: 'Te asesoramos desde la consulta hasta la entrega. Respuesta rápida por WhatsApp.' },
-    { icono: 'truck', color: 'cielo',  titulo: 'Envíos a todo el país', texto: 'Mandamos a cualquier provincia de Argentina. Coordinamos el envío por WhatsApp.' },
+    { icono: 'truck', color: 'cielo',  titulo: 'Envío gratis desde $200.000', texto: 'Mandamos a cualquier provincia de Argentina. Por debajo del monto, coordinamos el costo por WhatsApp.' },
     { icono: 'map',   color: 'menta',  titulo: 'Somos de GBA Oeste', texto: 'Ituzaingó, Buenos Aires. Un emprendimiento familiar con raíces reales.' },
     { icono: 'card',  color: 'durazno', titulo: 'Medios de pago', texto: 'Efectivo, billetera virtual y criptomoneda. Sin tarjetas de crédito ni débito.' },
     { icono: 'box',   color: 'manteca', titulo: 'Precios por mayor', texto: 'Escala de precios publicada: cuanto más llevás, menos pagás por unidad.' },
@@ -110,7 +110,9 @@ window.CALA_DATA = {
     { q: '¿Hacen cambios o devoluciones?',
       a: 'No realizamos cambios ni devoluciones. Por eso te respondemos todas las dudas antes de la compra: preguntanos lo que necesites por WhatsApp y te mostramos fotos o videos reales del producto.' },
     { q: '¿Puedo pedir cualquier cantidad?',
-      a: 'Sí. Trabajamos a pedido, así que podés cargar en el carrito las unidades que quieras, sin mínimo ni máximo. Al confirmar te avisamos por WhatsApp la disponibilidad y el plazo de entrega de esa cantidad.' },
+      a: 'Sí. Trabajamos a pedido, así que podés cargar en el carrito las unidades que quieras de cada producto, sin máximo. Al confirmar te avisamos por WhatsApp la disponibilidad y el plazo de entrega de esa cantidad.' },
+    { q: '¿Hay un pedido mínimo?',
+      a: 'Sí, el pedido mínimo para confirmar una compra es de $50.000. Podés combinar los productos que quieras hasta llegar a ese monto: el carrito te va mostrando cuánto te falta.' },
     { q: '¿Cómo funciona el precio por mayor?',
       a: 'Cada producto tiene una escala publicada: desde cierta cantidad, el precio por unidad baja. No hay que pedir código ni cotización: agregás las unidades al carrito y el precio se ajusta solo.' },
     { q: '¿Puedo combinar productos distintos para el precio mayorista?',
@@ -120,6 +122,6 @@ window.CALA_DATA = {
     { q: '¿Qué medios de pago aceptan?',
       a: 'Efectivo, billetera virtual y criptomoneda. No aceptamos tarjetas de crédito ni débito.' },
     { q: '¿Hacen envíos a todo el país?',
-      a: 'Sí, enviamos a cualquier provincia de Argentina. El costo del envío lo coordinamos por WhatsApp según tu dirección. Si sos de la zona de Ituzaingó también podés retirar en persona.' }
+      a: 'Sí, enviamos a cualquier provincia de Argentina. Superando $200.000 el envío es gratis; por debajo, el costo lo coordinamos por WhatsApp según tu dirección. Si sos de la zona de Ituzaingó también podés retirar en persona.' }
   ]
 };

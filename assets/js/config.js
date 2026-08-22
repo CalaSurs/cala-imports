@@ -24,6 +24,10 @@ window.CALA_CONFIG = {
   /* Cantidad a partir de la cual se aplica el precio de promo 2x */
   minimoPromo: 2,
 
+  /* Reglas de compra */
+  compraMinima: 50000,       // no se puede confirmar un pedido por debajo de esto
+  envioGratisDesde: 200000,  // a partir de acá el envío es gratis
+
   /* Mensajes precargados de WhatsApp */
   mensajes: {
     general: '¡Hola Cala Imports! Quería hacerles una consulta 👋',

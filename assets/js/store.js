@@ -138,13 +138,24 @@
       }
     }
 
+    var faltaMinimo = Math.max(0, CFG.compraMinima - subtotal);
+    var faltaEnvio = Math.max(0, CFG.envioGratisDesde - subtotal);
+
     return {
       lineas: ls,
       unidades: ls.reduce(function (a, l) { return a + l.cant; }, 0),
       subtotal: subtotal,
       ahorro: ls.reduce(function (a, l) { return a + l.ahorro; }, 0),
       sugerencia: sugerencia,
-      total: subtotal
+      total: subtotal,
+      /* reglas de compra */
+      minimo: CFG.compraMinima,
+      alcanzaMinimo: subtotal === 0 || subtotal >= CFG.compraMinima,
+      faltaMinimo: faltaMinimo,
+      envioGratisDesde: CFG.envioGratisDesde,
+      envioGratis: subtotal >= CFG.envioGratisDesde,
+      faltaEnvio: faltaEnvio,
+      progresoEnvio: Math.min(100, (subtotal / CFG.envioGratisDesde) * 100)
     };
   }
 
@@ -212,7 +223,7 @@
     L.push('');
     L.push('*TOTAL: ' + precio(t.total) + '*');
     if (t.ahorro > 0) L.push('(Ahorro por cantidad: ' + precio(t.ahorro) + ')');
-    L.push('Envío: a coordinar');
+    L.push('Envío: ' + (t.envioGratis ? 'GRATIS 🎉' : 'a coordinar'));
     if (datos.conociste) { L.push(''); L.push('Nos conoció por: ' + datos.conociste); }
     if (datos.estrellas > 0) {
       L.push('Calificación del sitio: ' + '⭐'.repeat(datos.estrellas) + ' (' + datos.estrellas + '/5)');
